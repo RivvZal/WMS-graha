@@ -106,7 +106,7 @@
                     <th class="py-2.5 px-3">Gudang Asal</th>
                     <th class="py-2.5 px-3">Tujuan / Penerima</th>
                     <th class="py-2.5 px-3 text-right">Jumlah</th>
-                    <th class="py-2.5 px-3 text-right">Surat Jalan</th>
+                    <th class="py-2.5 px-3 text-right">Aksi</th>
                   </tr>
                 </thead>
                 <tbody id="stockOutHistoryBody" class="divide-y divide-slate-100">${renderStockOutHistoryRows(outboundHistory)}</tbody>
@@ -129,7 +129,7 @@
             <td class="py-3 px-3"><span class="font-semibold text-slate-800">${m.warehouseId}</span></td>
             <td class="py-3 px-3 text-slate-700">${m.recipientOrSource || '-'}</td>
             <td class="py-3 px-3 text-right font-mono font-bold text-amber-600">-${m.qty} ${item.unit}</td>
-            <td class="py-3 px-3 text-right"><button type="button" onclick="showTransactionDetailModal('${m.id}')" class="rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-amber-700 hover:bg-amber-50">Cetak DO</button></td>
+            <td class="py-3 px-3 text-right"><div class="flex justify-end gap-1.5"><button type="button" onclick="openStockOutEditModal('${m.id}')" class="rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-700 hover:bg-sky-50 hover:text-sky-700">Edit</button><button type="button" onclick="showTransactionDetailModal('${m.id}')" class="rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-amber-700 hover:bg-amber-50">Bukti</button><button type="button" onclick="confirmDeleteStockOut('${m.id}')" class="rounded-lg bg-rose-50 px-2.5 py-1 text-[11px] font-semibold text-rose-700 hover:bg-rose-100">Hapus</button></div></td>
           </tr>
         `;
       }).join('');
@@ -147,6 +147,98 @@
       const count = document.getElementById('stockOutHistoryCount');
       if (body) body.innerHTML = renderStockOutHistoryRows(rows);
       if (count) count.textContent = `${rows.length} dokumen DO`;
+    }
+
+    function openStockOutEditModal(transactionId) {
+      const transaction = state.movements.find(m => m.id === transactionId && m.type === 'OUT');
+      if (!transaction) return;
+      const itemOptions = state.items.map(item => `<option value="${item.id}" ${item.id === transaction.itemId ? 'selected' : ''}>${item.sku} — ${item.name}</option>`).join('');
+      const warehouseOptions = state.warehouses.map(warehouse => `<option value="${warehouse.id}" ${warehouse.id === transaction.warehouseId ? 'selected' : ''}>${warehouse.id} — ${warehouse.name}</option>`).join('');
+      const html = `
+        <form onsubmit="saveStockOutEdit(event, '${transaction.id}')" class="space-y-4 text-xs">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="block font-semibold text-slate-700">Nomor DO<input id="editStockOutDocNo" required value="${escapeProfileValue(transaction.docNo)}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-mono font-normal" /></label>
+            <label class="block font-semibold text-slate-700">Tanggal & waktu<input id="editStockOutDate" required value="${escapeProfileValue(transaction.date)}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-mono font-normal" /></label>
+            <label class="block font-semibold text-slate-700 sm:col-span-2">Barang<select id="editStockOutItem" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-normal">${itemOptions}</select></label>
+            <label class="block font-semibold text-slate-700 sm:col-span-2">Gudang<select id="editStockOutWarehouse" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-normal">${warehouseOptions}</select></label>
+            <label class="block font-semibold text-slate-700">Jumlah<input id="editStockOutQty" type="number" min="1" required value="${Number(transaction.qty)}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-mono font-normal" /></label>
+            <label class="block font-semibold text-slate-700 sm:col-span-2">Tujuan / penerima<input id="editStockOutRecipient" required value="${escapeProfileValue(transaction.recipientOrSource)}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-normal" /></label>
+            <label class="block font-semibold text-slate-700 sm:col-span-2">Catatan<textarea id="editStockOutNotes" rows="2" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-normal">${escapeProfileValue(transaction.notes || '')}</textarea></label>
+          </div>
+          <div class="flex justify-end gap-2 border-t border-slate-200 pt-3">
+            <button type="button" onclick="closeModal()" class="rounded-xl bg-slate-100 px-4 py-2 font-semibold text-slate-700">Batal</button>
+            <button type="submit" class="rounded-xl bg-amber-600 px-4 py-2 font-semibold text-white hover:bg-amber-700">Simpan perubahan</button>
+          </div>
+        </form>
+      `;
+      openModal(`Edit Barang Keluar · ${transaction.docNo}`, html, 'max-w-2xl');
+    }
+
+    function saveStockOutEdit(event, transactionId) {
+      event.preventDefault();
+      const transaction = state.movements.find(m => m.id === transactionId && m.type === 'OUT');
+      if (!transaction) return;
+      const next = {
+        docNo: document.getElementById('editStockOutDocNo').value.trim(),
+        date: document.getElementById('editStockOutDate').value.trim(),
+        itemId: document.getElementById('editStockOutItem').value,
+        warehouseId: document.getElementById('editStockOutWarehouse').value,
+        qty: Number(document.getElementById('editStockOutQty').value) || 0,
+        recipientOrSource: document.getElementById('editStockOutRecipient').value.trim(),
+        notes: document.getElementById('editStockOutNotes').value.trim()
+      };
+      if (next.qty <= 0) {
+        showToast('Jumlah barang keluar harus lebih dari 0.', 'error');
+        return;
+      }
+
+      const sameStock = transaction.itemId === next.itemId && transaction.warehouseId === next.warehouseId;
+      const oldItem = getItemById(transaction.itemId);
+      const oldBalance = Number(oldItem.stockByWh?.[transaction.warehouseId] || 0);
+      const nextItem = getItemById(next.itemId);
+      const nextBalance = Number(nextItem.stockByWh?.[next.warehouseId] || 0);
+      const availableAfterRestore = sameStock ? oldBalance + Number(transaction.qty || 0) : nextBalance;
+      if (next.qty > availableAfterRestore) {
+        showToast(`Stok di ${next.warehouseId} tidak mencukupi. Tersedia ${availableAfterRestore} ${nextItem.unit}.`, 'error');
+        return;
+      }
+
+      oldItem.stockByWh[transaction.warehouseId] = oldBalance + Number(transaction.qty || 0);
+      nextItem.stockByWh[next.warehouseId] = Number(nextItem.stockByWh?.[next.warehouseId] || 0) - next.qty;
+      Object.assign(transaction, next);
+      saveState();
+      closeModal();
+      renderStockOut(document.getElementById('viewContainer'));
+      showToast('Transaksi barang keluar berhasil diperbarui.');
+    }
+
+    function confirmDeleteStockOut(transactionId) {
+      const transaction = state.movements.find(m => m.id === transactionId && m.type === 'OUT');
+      if (!transaction) return;
+      const item = getItemById(transaction.itemId);
+      const html = `
+        <div class="space-y-4 text-sm">
+          <p class="text-slate-600">Hapus pengeluaran <strong>${escapeProfileValue(transaction.docNo)}</strong> untuk ${escapeProfileValue(item.name)}? Stok gudang akan dikembalikan sebanyak ${transaction.qty} ${item.unit}.</p>
+          <div class="flex justify-end gap-2 border-t border-slate-200 pt-3">
+            <button type="button" onclick="closeModal()" class="rounded-xl bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-700">Batal</button>
+            <button type="button" onclick="deleteStockOut('${transaction.id}')" class="rounded-xl bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-700">Hapus transaksi</button>
+          </div>
+        </div>
+      `;
+      openModal('Hapus Barang Keluar', html, 'max-w-md');
+    }
+
+    function deleteStockOut(transactionId) {
+      const index = state.movements.findIndex(m => m.id === transactionId && m.type === 'OUT');
+      if (index === -1) return;
+      const transaction = state.movements[index];
+      const item = getItemById(transaction.itemId);
+      item.stockByWh[transaction.warehouseId] = Number(item.stockByWh?.[transaction.warehouseId] || 0) + Number(transaction.qty || 0);
+      state.movements.splice(index, 1);
+      saveState();
+      closeModal();
+      renderStockOut(document.getElementById('viewContainer'));
+      showToast('Transaksi barang keluar berhasil dihapus. Stok telah dikembalikan.');
     }
 
     function updateStockOutHelper() {

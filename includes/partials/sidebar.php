@@ -32,8 +32,8 @@
 
   
   <nav class="flex-1 overflow-y-auto custom-scroll py-3 px-3 space-y-1 bg-white" aria-label="Menu Utama WMS">
-    <div class="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Utama & Monitoring</div>
-    <button type="button" onclick="switchPage('dashboard')" id="nav-dashboard" title="Dashboard Operasional" class="nav-item active w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
+    <div class="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Menu Utama</div>
+    <button type="button" onclick="switchPage('dashboard')" id="nav-dashboard" title="Ringkasan" class="nav-item active w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
       <span class="flex items-center gap-3">
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
         <span>Dashboard</span>
@@ -41,27 +41,25 @@
       <span class="nav-badge px-1.5 py-0.5 text-[10px] rounded-md bg-blue-50 text-blue-600 font-mono">Live</span>
     </button>
 
-    <div class="pt-3 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Operasional Logistik</div>
+    <div class="pt-3 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Operasional</div>
     <button type="button" onclick="switchPage('stockin')" id="nav-stockin" title="Stock In / Barang Masuk" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
       <span class="flex items-center gap-3">
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
-        <span>Inbound (Barang Masuk)</span>
+        <span>Barang Masuk</span>
       </span>
-      <span id="badge-stockin-count" class="nav-badge px-1.5 py-0.5 text-[10px] rounded-md bg-slate-100 text-slate-600 font-mono">GRN</span>
     </button>
 
     <button type="button" onclick="switchPage('stockout')" id="nav-stockout" title="Stock Out / Barang Keluar" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
       <span class="flex items-center gap-3">
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
-        <span>Outbound (Barang Keluar)</span>
+        <span>Barang Keluar</span>
       </span>
-      <span id="badge-stockout-count" class="nav-badge px-1.5 py-0.5 text-[10px] rounded-md bg-slate-100 text-slate-600 font-mono">DO/GI</span>
     </button>
 
-    <button type="button" onclick="switchPage('inventory')" id="nav-inventory" title="Inventory Barang" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
+    <button type="button" onclick="switchPage('inventory')" id="nav-inventory" title="Barang dan stok" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
       <span class="flex items-center gap-3">
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-        <span>Inventory</span>
+        <span>Barang & Stok</span>
       </span>
       <span id="badge-inventory-count" class="nav-badge px-1.5 py-0.5 text-[10px] rounded-md bg-slate-100 text-slate-600 font-mono">12</span>
     </button>
@@ -69,28 +67,28 @@
     <button type="button" onclick="switchPage('movements')" id="nav-movements" title="Riwayat Transaksi / Movement" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
       <span class="flex items-center gap-3">
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-        <span>Riwayat Transaksi</span>
+        <span>Riwayat</span>
       </span>
       <span id="badge-movement-count" class="nav-badge px-1.5 py-0.5 text-[10px] rounded-md bg-slate-100 text-slate-600 font-mono">14</span>
     </button>
 
-    <div class="pt-3 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Master Data & Laporan</div>
-    <button type="button" onclick="switchPage('reports')" id="nav-reports" title="Report & Analitik" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
+    <div class="pt-3 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Data Pendukung</div>
+    <button type="button" onclick="switchPage('reports')" id="nav-reports" title="Laporan" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
       <span class="flex items-center gap-3">
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-        <span>Reports</span>
+        <span>Laporan</span>
       </span>
     </button>
 
-    <button type="button" onclick="switchPage('warehouse')" id="nav-warehouse" title="Data Gudang / Warehouse" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
+    <button type="button" onclick="switchPage('warehouse')" id="nav-warehouse" title="Gudang" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
       <span class="flex items-center gap-3">
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-        <span>Data Gudang</span>
+        <span>Gudang</span>
       </span>
       <span id="badge-warehouse-count" class="nav-badge px-1.5 py-0.5 text-[10px] rounded-md bg-slate-100 text-slate-600 font-mono">4 Hub</span>
     </button>
 
-    <button type="button" onclick="switchPage('vendors')" id="nav-vendors" title="Vendor Management" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
+    <button type="button" onclick="switchPage('vendors')" id="nav-vendors" title="Vendor" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
       <span class="flex items-center gap-3">
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         <span>Master Vendor</span>
@@ -98,7 +96,7 @@
       <span id="badge-vendor-count" class="nav-badge px-1.5 py-0.5 text-[10px] rounded-md bg-slate-100 text-slate-600 font-mono">6</span>
     </button>
 
-    <button type="button" onclick="switchPage('catalog')" id="nav-catalog" title="Vendor Catalog & Penawaran" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
+    <button type="button" onclick="switchPage('catalog')" id="nav-catalog" title="Katalog Vendor" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
       <span class="flex items-center gap-3">
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
         <span>Katalog Vendor</span>
@@ -106,7 +104,7 @@
       <span class="nav-badge px-1.5 py-0.5 text-[10px] rounded-md bg-slate-100 text-slate-600 font-mono">e-Proc</span>
     </button>
 
-    <button type="button" onclick="switchPage('users')" id="nav-users" title="User Management & Settings" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
+    <button type="button" onclick="switchPage('users')" id="nav-users" title="Pengguna dan akses" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">
       <span class="flex items-center gap-3">
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         <span>Pengguna & Akses</span>

@@ -29,19 +29,17 @@
             <div class="space-y-1.5">
               <div class="dashboard-eyebrow inline-flex items-center gap-2 px-2.5 py-1 rounded-full border text-[11px] font-semibold">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>Sistem Manajemen Gudang Terpadu • PT. Graha Segara</span>
+                <span>PT. Graha Segara</span>
               </div>
-              <h2 class="text-lg sm:text-xl font-bold tracking-tight">Pusat Kendali Inventaris TPFT, Cold Chain & MHE Pelabuhan</h2>
-              <p class="text-xs text-slate-300 max-w-2xl">
-                Memantau ketersediaan suku cadang Reefer Container, segel karantina ISO 17712, peralatan bongkar muat (MHE), dan material logistik pada seluruh fasilitas gudang PT. Graha Segara.
-              </p>
+              <h2 class="text-lg sm:text-xl font-bold tracking-tight">Ringkasan Gudang</h2>
+              <p class="text-xs text-slate-300 max-w-2xl">Pantau stok, aktivitas barang, dan gudang dalam satu tempat.</p>
             </div>
             <div class="flex flex-wrap items-center gap-2.5 shrink-0">
-              <button type="button" onclick="switchPage('inventory'); openItemModal()" class="dashboard-secondary-action px-3.5 py-2 rounded-xl text-xs font-semibold border transition">
-                + Tambah SKU Baru
+              <button type="button" onclick="switchPage('stockin')" class="dashboard-secondary-action px-3.5 py-2 rounded-xl text-xs font-semibold border transition">
+                Barang Masuk
               </button>
-              <button type="button" onclick="switchPage('catalog')" class="dashboard-primary-action px-3.5 py-2 rounded-xl text-xs font-bold shadow-sm transition">
-                Buka Katalog Vendor
+              <button type="button" onclick="switchPage('stockout')" class="dashboard-primary-action px-3.5 py-2 rounded-xl text-xs font-bold shadow-sm transition">
+                Barang Keluar
               </button>
             </div>
           </div>
@@ -50,9 +48,9 @@
           <div class="dashboard-kpis grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex items-start justify-between">
               <div>
-                <p class="text-xs font-medium text-slate-500">Total Kuantitas Stok</p>
+                <p class="text-xs font-medium text-slate-500">Jumlah Stok</p>
                 <p class="text-2xl font-extrabold text-slate-900 mt-1 font-mono">${totalUnits.toLocaleString('id-ID')}</p>
-                <p class="text-[11px] text-emerald-600 font-medium mt-1">Tersebar di ${state.items.length} SKU Aktif</p>
+                <p class="text-[11px] text-emerald-600 font-medium mt-1">${state.items.length} jenis barang</p>
               </div>
               <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center border border-sky-100">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
@@ -61,9 +59,9 @@
 
             <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex items-start justify-between">
               <div>
-                <p class="text-xs font-medium text-slate-500">Estimasi Nilai Persediaan</p>
+                <p class="text-xs font-medium text-slate-500">Nilai Persediaan</p>
                 <p class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1 font-mono">${formatRupiah(totalValuation)}</p>
-                <p class="text-[11px] text-slate-500 mt-1">Valuasi harga standar kontrak</p>
+                <p class="text-[11px] text-slate-500 mt-1">Perkiraan total nilai barang</p>
               </div>
               <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center border border-teal-100">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -72,13 +70,13 @@
 
             <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex items-start justify-between">
               <div>
-                <p class="text-xs font-medium text-slate-500">Arus Barang Masuk vs Keluar</p>
+                <p class="text-xs font-medium text-slate-500">Barang Masuk & Keluar</p>
                 <div class="flex items-baseline gap-3 mt-1">
-                  <span class="text-lg font-extrabold text-emerald-600 font-mono">+${totalInCount} In</span>
+                  <span class="text-lg font-extrabold text-emerald-600 font-mono">+${totalInCount} masuk</span>
                   <span class="text-slate-300">/</span>
-                  <span class="text-lg font-extrabold text-amber-600 font-mono">-${totalOutCount} Out</span>
+                  <span class="text-lg font-extrabold text-amber-600 font-mono">-${totalOutCount} keluar</span>
                 </div>
-                <p class="text-[11px] text-slate-500 mt-1">${filteredMovements.length} Transaksi tercatat</p>
+                <p class="text-[11px] text-slate-500 mt-1">${filteredMovements.length} transaksi tercatat</p>
               </div>
               <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
@@ -87,9 +85,9 @@
 
             <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex items-start justify-between">
               <div>
-                <p class="text-xs font-medium text-slate-500">Peringatan Stok Menipis</p>
-                <p class="text-2xl font-extrabold ${lowStockItems.length > 0 ? 'text-rose-600' : 'text-emerald-600'} mt-1 font-mono">${lowStockItems.length} SKU</p>
-                <p class="text-[11px] text-slate-500 mt-1">Di bawah ambang batas minimum</p>
+                <p class="text-xs font-medium text-slate-500">Stok Perlu Dicek</p>
+                <p class="text-2xl font-extrabold ${lowStockItems.length > 0 ? 'text-rose-600' : 'text-emerald-600'} mt-1 font-mono">${lowStockItems.length} barang</p>
+                <p class="text-[11px] text-slate-500 mt-1">Barang di bawah batas minimum</p>
               </div>
               <div class="w-10 h-10 rounded-xl ${lowStockItems.length > 0 ? 'bg-rose-50 text-rose-600 border-rose-100' : 'bg-slate-50 text-slate-500 border-slate-100'} flex items-center justify-center border">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
@@ -98,12 +96,17 @@
           </div>
 
           
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <details class="dashboard-advanced rounded-2xl border border-slate-200 bg-white shadow-xs" ontoggle="if(this.open){requestAnimationFrame(() => Object.values(chartInstances).forEach(chart => chart?.resize()))}">
+            <summary class="dashboard-advanced-summary">
+              <span><strong>Grafik & analisis</strong><small>Lihat pergerakan dan kategori stok</small></span>
+              <span class="dashboard-advanced-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 pt-0">
             <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                 <div>
-                  <h3 class="text-sm font-bold text-slate-900">Grafik Pergerakan Inventaris Masuk & Keluar</h3>
-                  <p class="text-xs text-slate-500">Volume transaksi penerimaan (Stock In) vs pengeluaran (Stock Out) 7 periode terakhir</p>
+                  <h3 class="text-sm font-bold text-slate-900">Pergerakan Barang</h3>
+                  <p class="text-xs text-slate-500">Jumlah barang masuk dan keluar selama 7 hari</p>
                 </div>
                 <div class="flex items-center gap-3 text-xs">
                   <span class="flex items-center gap-1.5 text-emerald-700 font-medium"><span class="w-2.5 h-2.5 rounded-xs bg-emerald-500 inline-block"></span>Barang Masuk</span>
@@ -124,20 +127,18 @@
                 <canvas id="dashboardCategoryChart"></canvas>
               </div>
             </div>
-          </div>
+            </div>
+          </details>
 
           
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="grid grid-cols-1 gap-4">
             
-            <div class="lg:col-span-6 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between mb-4">
-                  <div>
-                    <h3 class="text-sm font-bold text-slate-900">Kapasitas & Utilisasi Gudang PT. Graha Segara</h3>
-                    <p class="text-xs text-slate-500">Tingkat keterisian palet pada masing-masing hub pelabuhan</p>
-                  </div>
-                  <button type="button" onclick="switchPage('warehouse')" class="text-xs font-semibold text-sky-600 hover:text-sky-700">Detail Gudang →</button>
-                </div>
+            <details class="dashboard-advanced rounded-2xl border border-slate-200 bg-white shadow-xs">
+              <summary class="dashboard-advanced-summary">
+                <span><strong>Kapasitas Gudang</strong><small>Lihat kapasitas dan PIC setiap gudang</small></span>
+                <span class="dashboard-advanced-chevron" aria-hidden="true">⌄</span>
+              </summary>
+              <div class="p-4 pt-0">
                 <div class="space-y-3.5">
                   ${activeWarehouses.map(wh => {
                     const pct = Math.round((wh.usedPallet / wh.capacityPallet) * 100);
@@ -160,32 +161,32 @@
                   }).join('')}
                 </div>
               </div>
-            </div>
+            </details>
 
             
-            <div class="lg:col-span-6 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
               <div>
                 <div class="flex items-center justify-between mb-4">
                   <div>
-                    <h3 class="text-sm font-bold text-slate-900">Peringatan Stok Minimum (Reorder Alert)</h3>
-                    <p class="text-xs text-slate-500">Item kritis yang memerlukan pemesanan ulang (Restock)</p>
+                    <h3 class="text-sm font-bold text-slate-900">Stok Perlu Dicek</h3>
+                    <p class="text-xs text-slate-500">Barang yang jumlahnya sudah rendah</p>
                   </div>
                   <button type="button" onclick="switchPage('inventory')" class="text-xs font-semibold text-sky-600 hover:text-sky-700">Semua Barang →</button>
                 </div>
                 ${lowStockItems.length === 0 ? `
                   <div class="p-8 text-center bg-emerald-50/50 rounded-xl border border-emerald-200">
-                    <p class="text-sm font-semibold text-emerald-800">Seluruh Stok Aman Di Atas Batas Minimum</p>
-                    <p class="text-xs text-emerald-600 mt-1">Tidak ada SKU yang berada di bawah safety stock saat ini.</p>
+                    <p class="text-sm font-semibold text-emerald-800">Stok semua barang aman</p>
+                    <p class="text-xs text-emerald-600 mt-1">Belum ada barang yang perlu ditambah.</p>
                   </div>
                 ` : `
                   <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-xs">
                       <thead>
                         <tr class="border-b border-slate-200 text-slate-500 uppercase text-[10px]">
-                          <th class="py-2 px-2">SKU / Nama Barang</th>
+                          <th class="py-2 px-2">Barang</th>
                           <th class="py-2 px-2 text-right">Stok</th>
-                          <th class="py-2 px-2 text-right">Min</th>
-                          <th class="py-2 px-2 text-right">Aksi Cepat</th>
+                          <th class="py-2 px-2 text-right">Batas</th>
+                          <th class="py-2 px-2 text-right">Tindakan</th>
                         </tr>
                       </thead>
                       <tbody class="divide-y divide-slate-100">
@@ -193,13 +194,13 @@
                           <tr class="hover:bg-slate-50">
                             <td class="py-2.5 px-2">
                               <div class="font-semibold text-slate-800">${item.name}</div>
-                              <div class="text-[11px] font-mono text-slate-500">${item.sku} • Vendor: ${getVendorById(item.preferredVendorId).name}</div>
+                              <div class="text-[11px] font-mono text-slate-500">${item.sku}</div>
                             </td>
                             <td class="py-2.5 px-2 text-right font-mono font-bold text-rose-600">${qty} ${item.unit}</td>
                             <td class="py-2.5 px-2 text-right font-mono text-slate-500">${threshold} ${item.unit}</td>
                             <td class="py-2.5 px-2 text-right">
                               <button type="button" onclick="quickRestockFromAlert('${item.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[11px]">
-                                + Stock In
+                                Tambah Stok
                               </button>
                             </td>
                           </tr>
@@ -216,8 +217,8 @@
           <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
               <div>
-                <h3 class="text-sm font-bold text-slate-900">Aktivitas Logistik Terbaru (Real-Time Ledger)</h3>
-                <p class="text-xs text-slate-500">Catatan transaksi penerimaan, pengeluaran, dan transfer barang terakhir</p>
+                <h3 class="text-sm font-bold text-slate-900">Transaksi Terbaru</h3>
+                <p class="text-xs text-slate-500">Catatan barang masuk, barang keluar, dan transfer terakhir</p>
               </div>
               <button type="button" onclick="switchPage('movements')" class="text-xs font-semibold text-sky-600 hover:text-sky-700">Lihat Semua Riwayat Transaksi →</button>
             </div>
@@ -225,13 +226,10 @@
               <table class="w-full text-left border-collapse text-xs">
                 <thead>
                   <tr class="bg-slate-50 border-y border-slate-200 text-slate-600 uppercase text-[10px]">
-                    <th class="py-2.5 px-3">No. Dokumen</th>
-                    <th class="py-2.5 px-3">Waktu</th>
-                    <th class="py-2.5 px-3">Tipe</th>
-                    <th class="py-2.5 px-3">Barang / SKU</th>
+                    <th class="py-2.5 px-3">Transaksi</th>
+                    <th class="py-2.5 px-3">Barang</th>
                     <th class="py-2.5 px-3">Gudang</th>
                     <th class="py-2.5 px-3 text-right">Jumlah</th>
-                    <th class="py-2.5 px-3">Vendor / Tujuan</th>
                     <th class="py-2.5 px-3 text-right">Detail</th>
                   </tr>
                 </thead>
@@ -247,10 +245,9 @@
                     const sign = m.type === 'IN' ? '+' : m.type === 'OUT' ? '-' : '⇄';
                     return `
                       <tr class="hover:bg-slate-50">
-                        <td class="py-2.5 px-3 font-mono font-semibold text-slate-800">${m.docNo}</td>
-                        <td class="py-2.5 px-3 text-slate-500 font-mono text-[11px]">${m.date}</td>
                         <td class="py-2.5 px-3">
-                          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${badgeClass}">${m.type}</span>
+                          <div class="font-mono font-semibold text-slate-800">${m.docNo}</div>
+                          <div class="mt-1 flex items-center gap-1.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${badgeClass}">${m.type === 'IN' ? 'Masuk' : m.type === 'OUT' ? 'Keluar' : 'Transfer'}</span><span class="text-[10px] text-slate-500">${m.date}</span></div>
                         </td>
                         <td class="py-2.5 px-3">
                           <div class="font-medium text-slate-900">${item.name}</div>
@@ -258,7 +255,6 @@
                         </td>
                         <td class="py-2.5 px-3 text-slate-600">${wh.id}</td>
                         <td class="py-2.5 px-3 text-right font-mono font-bold text-slate-900">${sign}${m.qty} ${item.unit}</td>
-                        <td class="py-2.5 px-3 text-slate-600 truncate max-w-[200px]">${m.recipientOrSource}</td>
                         <td class="py-2.5 px-3 text-right">
                           <button type="button" onclick="showTransactionDetailModal('${m.id}')" class="text-sky-600 hover:underline font-medium">Surat</button>
                         </td>

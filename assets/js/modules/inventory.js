@@ -7,19 +7,19 @@
           <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div class="flex flex-wrap items-center gap-1.5">
               <button type="button" onclick="state.inventorySubTab='list'; renderInventory(document.getElementById('viewContainer'))" class="px-3.5 py-2 rounded-xl text-xs font-semibold transition ${subTab === 'list' ? 'bg-sky-600 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
-                Daftar & Detail Barang (${state.items.length})
+                Barang (${state.items.length})
               </button>
               <button type="button" onclick="state.inventorySubTab='categories'; renderInventory(document.getElementById('viewContainer'))" class="px-3.5 py-2 rounded-xl text-xs font-semibold transition ${subTab === 'categories' ? 'bg-sky-600 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
-                Kategori & Satuan Barang
+                Kategori & Satuan
               </button>
               <button type="button" onclick="state.inventorySubTab='vendorPricing'; renderInventory(document.getElementById('viewContainer'))" class="px-3.5 py-2 rounded-xl text-xs font-semibold transition ${subTab === 'vendorPricing' ? 'bg-sky-600 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
-                Informasi & Harga Vendor
+                Harga Vendor
               </button>
             </div>
             <div class="flex items-center gap-2">
               <button type="button" onclick="openItemModal()" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold shadow-xs flex items-center gap-1.5">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                <span>Tambah Barang Baru</span>
+                <span>Tambah Barang</span>
               </button>
             </div>
           </div>
@@ -38,24 +38,24 @@
       subEl.innerHTML = `
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
           
-          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-            <div class="sm:col-span-2">
-              <label class="block text-[11px] font-semibold text-slate-500 mb-1">Cari Nama Barang / SKU / Spesifikasi</label>
-              <input id="invSearchInput" type="text" oninput="filterInventoryTable()" placeholder="Ketik nama barang atau kode SKU (mis. GS-RFC-001)..." class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-sky-500" />
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-500 mb-1">Cari barang</label>
+              <input id="invSearchInput" type="search" oninput="filterInventoryTable()" placeholder="Nama barang atau SKU" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-sky-500" />
             </div>
             <div>
-              <label class="block text-[11px] font-semibold text-slate-500 mb-1">Filter Kategori</label>
+              <label class="block text-[11px] font-semibold text-slate-500 mb-1">Kategori</label>
               <select id="invCategoryFilter" onchange="filterInventoryTable()" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-sky-500">
                 <option value="ALL">Semua Kategori</option>
                 ${state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('')}
               </select>
             </div>
             <div>
-              <label class="block text-[11px] font-semibold text-slate-500 mb-1">Status Ketersediaan</label>
+              <label class="block text-[11px] font-semibold text-slate-500 mb-1">Kondisi stok</label>
               <select id="invStatusFilter" onchange="filterInventoryTable()" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-sky-500">
-                <option value="ALL">Semua Status Stok</option>
-                <option value="NORMAL">Stok Aman (Normal)</option>
-                <option value="LOW">Stok Menipis (Low Stock)</option>
+                <option value="ALL">Semua kondisi</option>
+                <option value="NORMAL">Aman</option>
+                <option value="LOW">Menipis</option>
               </select>
             </div>
           </div>
@@ -66,12 +66,8 @@
               <thead>
                 <tr class="bg-slate-50 border-y border-slate-200 text-slate-600 uppercase text-[10px]">
                   <th class="py-3 px-3">Kode SKU</th>
-                  <th class="py-3 px-3">Nama & Spesifikasi Barang</th>
-                  <th class="py-3 px-3">Kategori</th>
-                  <th class="py-3 px-3 text-right">Stok (${state.globalHub === 'ALL' ? 'Nasional' : state.globalHub})</th>
-                  <th class="py-3 px-3 text-right">Min. Stok</th>
-                  <th class="py-3 px-3 text-right">Harga Standar</th>
-                  <th class="py-3 px-3">Vendor Utama</th>
+                  <th class="py-3 px-3">Nama barang</th>
+                  <th class="py-3 px-3 text-right">Stok</th>
                   <th class="py-3 px-3 text-center inventory-status-column">Status</th>
                   <th class="py-3 px-3 text-right">Aksi</th>
                 </tr>
@@ -102,7 +98,7 @@
       });
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" class="py-8 text-center text-slate-400">Tidak ada barang yang sesuai dengan filter pencarian.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">Barang tidak ditemukan. Coba ubah kata kunci atau filter.</td></tr>`;
         return;
       }
 
@@ -110,22 +106,18 @@
         const qty = getItemTotalStock(item, state.globalHub);
         const minThreshold = state.globalHub === 'ALL' ? item.minStock : Math.ceil(item.minStock / 3);
         const isLow = qty <= minThreshold;
-        const vendor = getVendorById(item.preferredVendorId);
 
         return `
           <tr class="hover:bg-slate-50/90 transition">
             <td class="py-3 px-3 font-mono font-bold text-sky-700">${item.sku}</td>
             <td class="py-3 px-3">
               <div class="font-semibold text-slate-900">${item.name}</div>
-              <div class="text-[11px] text-slate-500 truncate max-w-xs">${item.specs || '-'}</div>
-            </td>
-            <td class="py-3 px-3">
-              <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-medium">${item.category}</span>
+              <div class="mt-0.5 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500">
+                <span class="rounded bg-slate-100 px-1.5 py-0.5">${item.category}</span>
+                <span>Batas minimum ${minThreshold} ${item.unit}</span>
+              </div>
             </td>
             <td class="py-3 px-3 text-right font-mono font-bold text-slate-900">${qty.toLocaleString('id-ID')} <span class="font-normal text-slate-500">${item.unit}</span></td>
-            <td class="py-3 px-3 text-right font-mono text-slate-500">${minThreshold} ${item.unit}</td>
-            <td class="py-3 px-3 text-right font-mono font-medium text-slate-800">${formatRupiah(item.basePrice)}</td>
-            <td class="py-3 px-3 text-slate-700">${vendor.name}</td>
             <td class="py-3 px-3 text-center inventory-status-column" style="min-width: 7.5rem; white-space: nowrap">
               ${isLow
                 ? `<span class="stock-status-badge stock-status-low px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200" style="display: inline-flex; white-space: nowrap">Stok Menipis</span>`

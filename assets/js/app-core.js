@@ -428,44 +428,44 @@
 
     const PAGE_META = {
       dashboard: {
-        title: 'Dashboard Operasional WMS',
-        subtitle: 'Ringkasan stok real-time, grafik arus keluar-masuk barang, utilisasi gudang & peringatan stok'
+        title: 'Ringkasan',
+        subtitle: 'Pantau stok, transaksi, dan kondisi gudang'
       },
       inventory: {
-        title: 'Manajemen Inventory & Master Barang',
-        subtitle: 'Daftar barang, detail spesifikasi, kategori/satuan, serta komparasi harga multi-vendor'
+        title: 'Barang & Stok',
+        subtitle: 'Cari barang, lihat jumlah stok, dan kelola data barang'
       },
       warehouse: {
-        title: 'Data Gudang (Warehouse)',
-        subtitle: 'Manajemen cabang gudang PT. Graha Segara, ringkasan fasilitas & distribusi stok'
+        title: 'Gudang',
+        subtitle: 'Ringkasan fasilitas dan stok di setiap gudang'
       },
       vendors: {
-        title: 'Vendor Management (Mitra Pemasok)',
-        subtitle: 'Direktori rekanan penyedia barang, kontak PIC, SLA pengiriman & daftar barang pemasok'
+        title: 'Vendor',
+        subtitle: 'Daftar pemasok, kontak, dan barang yang disediakan'
       },
       catalog: {
-        title: 'Vendor Catalog & Pemilihan Penawaran',
-        subtitle: 'Katalog penawaran harga dari vendor, detail spesifikasi kontrak & seleksi vendor utama'
+        title: 'Katalog Vendor',
+        subtitle: 'Bandingkan harga dan waktu pengiriman dari vendor'
       },
       stockin: {
-        title: 'Stock In — Penerimaan Barang Masuk (Inbound / GRN)',
-        subtitle: 'Formulir input penerimaan barang dari vendor ke gudang & riwayat GRN'
+        title: 'Barang Masuk',
+        subtitle: 'Riwayat penerimaan barang dan formulir barang masuk'
       },
       stockout: {
-        title: 'Stock Out — Pengeluaran Barang (Outbound / DO)',
-        subtitle: 'Formulir pengeluaran barang dari gudang asal ke unit operasional/tujuan & riwayat Surat Jalan'
+        title: 'Barang Keluar',
+        subtitle: 'Riwayat pengeluaran barang dan formulir barang keluar'
       },
       movements: {
-        title: 'Riwayat Transaksi & Pergerakan Stok (Stock Movement)',
-        subtitle: 'Jurnal lengkap pergerakan stok (Inbound, Outbound, dan Transfer Antar Gudang)'
+        title: 'Riwayat Transaksi',
+        subtitle: 'Barang masuk, barang keluar, dan transfer antar gudang'
       },
       reports: {
-        title: 'Laporan & Analitik Eksekutif (WMS Report)',
-        subtitle: 'Valuasi persediaan, rekapitulasi mutasi barang, kapasitas gudang & evaluasi performa vendor'
+        title: 'Laporan',
+        subtitle: 'Ringkasan persediaan, transaksi, dan kapasitas gudang'
       },
       users: {
-        title: 'Manajemen Pengguna & Hak Akses (User Management)',
-        subtitle: 'Pengaturan akun personel gudang, otorisasi cabang hub & log aktivitas operator'
+        title: 'Pengguna & Akses',
+        subtitle: 'Kelola akun pengguna dan akses gudang'
       }
     };
 

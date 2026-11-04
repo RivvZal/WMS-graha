@@ -116,7 +116,7 @@
                     <th class="py-2.5 px-3">Vendor Pengirim</th>
                     <th class="py-2.5 px-3">Gudang Tujuan</th>
                     <th class="py-2.5 px-3 text-right">Jumlah</th>
-                    <th class="py-2.5 px-3 text-right">Bukti</th>
+                    <th class="py-2.5 px-3 text-right">Aksi</th>
                   </tr>
                 </thead>
                 <tbody id="stockInHistoryBody" class="divide-y divide-slate-100">${renderStockInHistoryRows(inboundHistory)}</tbody>
@@ -140,7 +140,7 @@
             <td class="py-3 px-3 text-slate-700">${m.recipientOrSource || '-'}</td>
             <td class="py-3 px-3"><span class="font-semibold text-slate-800">${m.warehouseId}</span></td>
             <td class="py-3 px-3 text-right font-mono font-bold text-emerald-600">+${m.qty} ${item.unit}</td>
-            <td class="py-3 px-3 text-right"><button type="button" onclick="showTransactionDetailModal('${m.id}')" class="rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-sky-700 hover:bg-sky-50">Cetak GRN</button></td>
+            <td class="py-3 px-3 text-right"><div class="flex justify-end gap-1.5"><button type="button" onclick="openStockInEditModal('${m.id}')" class="rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-700 hover:bg-sky-50 hover:text-sky-700">Edit</button><button type="button" onclick="showTransactionDetailModal('${m.id}')" class="rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-sky-700 hover:bg-sky-50">Bukti</button><button type="button" onclick="confirmDeleteStockIn('${m.id}')" class="rounded-lg bg-rose-50 px-2.5 py-1 text-[11px] font-semibold text-rose-700 hover:bg-rose-100">Hapus</button></div></td>
           </tr>
         `;
       }).join('');
@@ -159,6 +159,104 @@
       const count = document.getElementById('stockInHistoryCount');
       if (body) body.innerHTML = renderStockInHistoryRows(rows);
       if (count) count.textContent = `${rows.length} dokumen GRN`;
+    }
+
+    function openStockInEditModal(transactionId) {
+      const transaction = state.movements.find(m => m.id === transactionId && m.type === 'IN');
+      if (!transaction) return;
+      const itemOptions = state.items.map(item => `<option value="${item.id}" ${item.id === transaction.itemId ? 'selected' : ''}>${item.sku} — ${item.name}</option>`).join('');
+      const warehouseOptions = state.warehouses.map(warehouse => `<option value="${warehouse.id}" ${warehouse.id === transaction.warehouseId ? 'selected' : ''}>${warehouse.id} — ${warehouse.name}</option>`).join('');
+      const vendorOptions = state.vendors.map(vendor => `<option value="${vendor.id}" ${vendor.id === transaction.vendorId ? 'selected' : ''}>${vendor.name}</option>`).join('');
+      const html = `
+        <form onsubmit="saveStockInEdit(event, '${transaction.id}')" class="space-y-4 text-xs">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="block font-semibold text-slate-700">Nomor GRN<input id="editStockInDocNo" required value="${escapeProfileValue(transaction.docNo)}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-mono font-normal" /></label>
+            <label class="block font-semibold text-slate-700">Tanggal & waktu<input id="editStockInDate" required value="${escapeProfileValue(transaction.date)}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-mono font-normal" /></label>
+            <label class="block font-semibold text-slate-700 sm:col-span-2">Barang<select id="editStockInItem" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-normal">${itemOptions}</select></label>
+            <label class="block font-semibold text-slate-700 sm:col-span-2">Vendor<select id="editStockInVendor" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-normal">${vendorOptions}</select></label>
+            <label class="block font-semibold text-slate-700 sm:col-span-2">Gudang<select id="editStockInWarehouse" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-normal">${warehouseOptions}</select></label>
+            <label class="block font-semibold text-slate-700">Jumlah<input id="editStockInQty" type="number" min="1" required value="${Number(transaction.qty)}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-mono font-normal" /></label>
+            <label class="block font-semibold text-slate-700 sm:col-span-2">Catatan<textarea id="editStockInNotes" rows="2" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-normal">${escapeProfileValue(transaction.notes || '')}</textarea></label>
+          </div>
+          <div class="flex justify-end gap-2 border-t border-slate-200 pt-3">
+            <button type="button" onclick="closeModal()" class="rounded-xl bg-slate-100 px-4 py-2 font-semibold text-slate-700">Batal</button>
+            <button type="submit" class="rounded-xl bg-emerald-600 px-4 py-2 font-semibold text-white hover:bg-emerald-700">Simpan perubahan</button>
+          </div>
+        </form>
+      `;
+      openModal(`Edit Barang Masuk · ${transaction.docNo}`, html, 'max-w-2xl');
+    }
+
+    function saveStockInEdit(event, transactionId) {
+      event.preventDefault();
+      const transaction = state.movements.find(m => m.id === transactionId && m.type === 'IN');
+      if (!transaction) return;
+      const next = {
+        docNo: document.getElementById('editStockInDocNo').value.trim(),
+        date: document.getElementById('editStockInDate').value.trim(),
+        itemId: document.getElementById('editStockInItem').value,
+        vendorId: document.getElementById('editStockInVendor').value,
+        warehouseId: document.getElementById('editStockInWarehouse').value,
+        qty: Number(document.getElementById('editStockInQty').value) || 0,
+        notes: document.getElementById('editStockInNotes').value.trim()
+      };
+      if (next.qty <= 0) {
+        showToast('Jumlah barang masuk harus lebih dari 0.', 'error');
+        return;
+      }
+
+      const oldItem = getItemById(transaction.itemId);
+      const oldBalance = Number(oldItem.stockByWh?.[transaction.warehouseId] || 0);
+      const sameStock = transaction.itemId === next.itemId && transaction.warehouseId === next.warehouseId;
+      const projectedOldBalance = oldBalance - Number(transaction.qty || 0) + (sameStock ? next.qty : 0);
+      if (projectedOldBalance < 0) {
+        showToast('Stok sudah terpakai. Transaksi ini tidak bisa diubah ke data tersebut.', 'error');
+        return;
+      }
+
+      oldItem.stockByWh[transaction.warehouseId] = oldBalance - Number(transaction.qty || 0);
+      const newItem = getItemById(next.itemId);
+      newItem.stockByWh[next.warehouseId] = Number(newItem.stockByWh?.[next.warehouseId] || 0) + next.qty;
+      Object.assign(transaction, next, { recipientOrSource: getVendorById(next.vendorId).name });
+      saveState();
+      closeModal();
+      renderStockIn(document.getElementById('viewContainer'));
+      showToast('Transaksi barang masuk berhasil diperbarui.');
+    }
+
+    function confirmDeleteStockIn(transactionId) {
+      const transaction = state.movements.find(m => m.id === transactionId && m.type === 'IN');
+      if (!transaction) return;
+      const item = getItemById(transaction.itemId);
+      const html = `
+        <div class="space-y-4 text-sm">
+          <p class="text-slate-600">Hapus penerimaan <strong>${escapeProfileValue(transaction.docNo)}</strong> untuk ${escapeProfileValue(item.name)}? Stok gudang akan dikurangi sebanyak ${transaction.qty} ${item.unit}.</p>
+          <div class="flex justify-end gap-2 border-t border-slate-200 pt-3">
+            <button type="button" onclick="closeModal()" class="rounded-xl bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-700">Batal</button>
+            <button type="button" onclick="deleteStockIn('${transaction.id}')" class="rounded-xl bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-700">Hapus transaksi</button>
+          </div>
+        </div>
+      `;
+      openModal('Hapus Barang Masuk', html, 'max-w-md');
+    }
+
+    function deleteStockIn(transactionId) {
+      const index = state.movements.findIndex(m => m.id === transactionId && m.type === 'IN');
+      if (index === -1) return;
+      const transaction = state.movements[index];
+      const item = getItemById(transaction.itemId);
+      const balance = Number(item.stockByWh?.[transaction.warehouseId] || 0);
+      if (balance < Number(transaction.qty || 0)) {
+        closeModal();
+        showToast('Penerimaan ini tidak dapat dihapus karena sebagian stoknya sudah keluar.', 'error');
+        return;
+      }
+      item.stockByWh[transaction.warehouseId] = balance - Number(transaction.qty || 0);
+      state.movements.splice(index, 1);
+      saveState();
+      closeModal();
+      renderStockIn(document.getElementById('viewContainer'));
+      showToast('Transaksi barang masuk berhasil dihapus.');
     }
 
     function updateStockInItemHelper() {
