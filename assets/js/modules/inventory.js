@@ -72,7 +72,7 @@
                   <th class="py-3 px-3 text-right">Min. Stok</th>
                   <th class="py-3 px-3 text-right">Harga Standar</th>
                   <th class="py-3 px-3">Vendor Utama</th>
-                  <th class="py-3 px-3 text-center">Status</th>
+                  <th class="py-3 px-3 text-center inventory-status-column">Status</th>
                   <th class="py-3 px-3 text-right">Aksi</th>
                 </tr>
               </thead>
@@ -126,10 +126,10 @@
             <td class="py-3 px-3 text-right font-mono text-slate-500">${minThreshold} ${item.unit}</td>
             <td class="py-3 px-3 text-right font-mono font-medium text-slate-800">${formatRupiah(item.basePrice)}</td>
             <td class="py-3 px-3 text-slate-700">${vendor.name}</td>
-            <td class="py-3 px-3 text-center">
+            <td class="py-3 px-3 text-center inventory-status-column" style="min-width: 7.5rem; white-space: nowrap">
               ${isLow
-                ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">Stok Menipis</span>`
-                : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Aman</span>`
+                ? `<span class="stock-status-badge stock-status-low px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200" style="display: inline-flex; white-space: nowrap">Stok Menipis</span>`
+                : `<span class="stock-status-badge stock-status-safe px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200" style="display: inline-flex; white-space: nowrap">Aman</span>`
               }
             </td>
             <td class="py-3 px-3 text-right whitespace-nowrap space-x-1">

@@ -20,6 +20,7 @@ window.addEventListener('DOMContentLoaded', () => {
     sidebarToggle.setAttribute('aria-label', sidebarHidden ? 'Tampilkan menu samping' : 'Sembunyikan menu samping');
   }
 
+  renderUserProfile();
   const hubSelect = document.getElementById('globalHubFilter');
   if (hubSelect) hubSelect.value = state.globalHub || 'ALL';
   renderHeaderNotifications();

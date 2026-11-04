@@ -42,16 +42,16 @@
 
           <div class="header-menu-root">
             <button id="profileToggle" type="button" onclick="toggleHeaderMenu('profileMenu')" class="profile-toggle" aria-label="Buka menu profil" aria-expanded="false" aria-controls="profileMenu">
-              <span class="profile-avatar">HS</span>
-              <span class="profile-name">Hendra Saputra</span>
+              <span class="profile-avatar" data-profile-avatar>HS</span>
+              <span class="profile-name" data-profile-name>Hendra Saputra</span>
               <svg class="w-3.5 h-3.5 profile-caret" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9 6 6 6-6"/></svg>
             </button>
             <div id="profileMenu" class="header-dropdown profile-dropdown hidden">
               <div class="profile-menu-heading">
-                <span class="profile-avatar">HS</span>
+                <span class="profile-avatar" data-profile-avatar>HS</span>
                 <div class="min-w-0">
-                  <p class="font-semibold text-slate-900 truncate">Hendra Saputra</p>
-                  <p class="text-[11px] text-slate-500 truncate">Kepala Gudang</p>
+                  <p class="font-semibold text-slate-900 truncate" data-profile-name>Hendra Saputra</p>
+                  <p class="text-[11px] text-slate-500 truncate" data-profile-role>Kepala Gudang</p>
                 </div>
               </div>
               <button type="button" onclick="openSettingsModal()" class="profile-menu-item">

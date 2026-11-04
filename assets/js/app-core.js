@@ -185,55 +185,159 @@
       `).join('');
     }
 
+    function readUserProfile() {
+      const defaults = {
+        name: 'Hendra Saputra',
+        role: 'Kepala Gudang',
+        department: 'Operasional Gudang',
+        email: '',
+        phone: '+62-21-4390-4902',
+        photo: ''
+      };
+      try {
+        return { ...defaults, ...JSON.parse(localStorage.getItem('WMS_USER_PROFILE') || '{}') };
+      } catch (err) {
+        return defaults;
+      }
+    }
+
+    function escapeProfileValue(value) {
+      return String(value || '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[char]);
+    }
+
+    function profileInitials(name) {
+      return String(name || 'User').trim().split(/\s+/).slice(0, 2).map(part => part.charAt(0)).join('').toUpperCase() || 'U';
+    }
+
+    function renderUserProfile() {
+      const profile = readUserProfile();
+      document.querySelectorAll('[data-profile-name]').forEach(element => { element.textContent = profile.name; });
+      document.querySelectorAll('[data-profile-role]').forEach(element => { element.textContent = profile.role; });
+      document.querySelectorAll('[data-profile-avatar]').forEach(element => {
+        element.replaceChildren();
+        if (profile.photo) {
+          const image = document.createElement('img');
+          image.src = profile.photo;
+          image.alt = `Foto ${profile.name}`;
+          image.className = 'h-full w-full rounded-full object-cover';
+          element.appendChild(image);
+        } else {
+          element.textContent = profileInitials(profile.name);
+        }
+      });
+      const sidebarAvatar = document.getElementById('sidebarProfileAvatar');
+      if (sidebarAvatar) {
+        sidebarAvatar.replaceChildren();
+        if (profile.photo) {
+          const image = document.createElement('img');
+          image.src = profile.photo;
+          image.alt = `Foto ${profile.name}`;
+          image.className = 'h-full w-full object-cover';
+          sidebarAvatar.appendChild(image);
+        } else {
+          sidebarAvatar.textContent = profileInitials(profile.name);
+        }
+      }
+    }
+
+    function previewProfilePhoto(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        showToast('Pilih file gambar untuk foto profil.', 'warning');
+        input.value = '';
+        return;
+      }
+      if (file.size > 8 * 1024 * 1024) {
+        showToast('Ukuran foto maksimal 8 MB.', 'warning');
+        input.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const image = new Image();
+        image.onload = () => {
+          const scale = Math.min(1, 512 / Math.max(image.width, image.height));
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.max(1, Math.round(image.width * scale));
+          canvas.height = Math.max(1, Math.round(image.height * scale));
+          canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+          window.profilePhotoDraft = canvas.toDataURL('image/jpeg', 0.82);
+          const preview = document.querySelector('.profile-photo-preview');
+          if (preview) {
+            const photo = document.createElement('img');
+            photo.src = window.profilePhotoDraft;
+            photo.alt = 'Pratinjau foto profil';
+            photo.className = 'h-full w-full rounded-full object-cover';
+            preview.replaceChildren(photo);
+          }
+        };
+        image.onerror = () => showToast('Foto tidak dapat dibuka. Coba file gambar lain.', 'error');
+        image.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
     function openSettingsModal() {
       closeHeaderMenus();
-      let settings = {};
-      try {
-        settings = JSON.parse(localStorage.getItem('WMS_USER_SETTINGS') || '{}');
-      } catch (err) {
-        settings = {};
-      }
-      const hubOptions = state.warehouses.map(warehouse => `
-        <option value="${warehouse.id}" ${warehouse.id === state.globalHub ? 'selected' : ''}>${warehouse.id} · ${warehouse.name}</option>
-      `).join('');
+      const profile = readUserProfile();
+      window.profilePhotoDraft = profile.photo;
+      const initial = escapeProfileValue(profileInitials(profile.name));
+      const preview = profile.photo
+        ? `<img src="${escapeProfileValue(profile.photo)}" alt="Foto profil" class="h-full w-full rounded-full object-cover" />`
+        : `<span class="profile-photo-initials">${initial}</span>`;
       const form = `
-        <form onsubmit="saveUserSettings(event)" class="space-y-4 text-sm">
-          <div>
-            <label for="settingsHub" class="block text-xs font-semibold text-slate-700 mb-1.5">Hub yang sedang ditampilkan</label>
-            <select id="settingsHub" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
-              <option value="ALL" ${state.globalHub === 'ALL' ? 'selected' : ''}>Semua Hub Nasional</option>
-              ${hubOptions}
-            </select>
+        <form onsubmit="saveUserProfile(event)" class="profile-settings-form">
+          <div class="profile-settings-intro">
+            <div class="profile-photo-control">
+              <div class="profile-photo-preview">${preview}</div>
+              <label for="profilePhotoInput" class="profile-photo-upload">Ubah foto</label>
+              <input id="profilePhotoInput" type="file" accept="image/*" class="sr-only" onchange="previewProfilePhoto(this)" />
+            </div>
+            <div class="min-w-0">
+              <h3>Profil pengguna</h3>
+              <p>Perbarui informasi yang ditampilkan pada akun dan navigasi.</p>
+            </div>
           </div>
-          <label class="flex items-start gap-3 rounded-xl border border-slate-200 p-3">
-            <input id="settingsNotifications" type="checkbox" class="mt-0.5 accent-blue-700" ${settings.notificationsEnabled === false ? '' : 'checked'} />
-            <span><span class="block text-xs font-semibold text-slate-800">Notifikasi persediaan</span><span class="mt-0.5 block text-[11px] text-slate-500">Tampilkan peringatan stok menipis dan transaksi terbaru.</span></span>
-          </label>
-          <div class="flex justify-end gap-2 border-t border-slate-200 pt-3">
-            <button type="button" onclick="closeModal()" class="rounded-lg bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-700">Batal</button>
-            <button type="submit" class="rounded-lg bg-blue-800 px-4 py-2 text-xs font-semibold text-white">Simpan Pengaturan</button>
+          <div class="profile-fields-grid">
+            <label class="profile-field profile-field-wide"><span>Nama lengkap</span><input id="profileName" type="text" maxlength="80" required value="${escapeProfileValue(profile.name)}" autocomplete="name" /></label>
+            <div class="profile-field"><span>Jabatan</span><p class="profile-readonly-value">${escapeProfileValue(profile.role)}</p></div>
+            <div class="profile-field"><span>Departemen / area</span><p class="profile-readonly-value">${escapeProfileValue(profile.department)}</p></div>
+            <label class="profile-field"><span>Email</span><input id="profileEmail" type="email" maxlength="120" value="${escapeProfileValue(profile.email)}" autocomplete="email" placeholder="nama@perusahaan.co.id" /></label>
+            <label class="profile-field"><span>Nomor telepon</span><input id="profilePhone" type="tel" maxlength="30" value="${escapeProfileValue(profile.phone)}" autocomplete="tel" /></label>
+          </div>
+          <p class="profile-settings-note">Jabatan dan departemen hanya dapat diubah oleh Super Admin. Perubahan profil tersimpan di browser ini selama versi backend belum terhubung.</p>
+          <div class="profile-settings-actions">
+            <button type="button" onclick="closeModal()" class="profile-cancel-button">Batal</button>
+            <button type="submit" class="profile-save-button">Simpan profil</button>
           </div>
         </form>
       `;
-      openModal('Pengaturan WMS', form, 'max-w-lg');
+      openModal('Pengaturan Akun', form, 'max-w-2xl');
     }
 
-    function saveUserSettings(event) {
+    function saveUserProfile(event) {
       event.preventDefault();
-      const selectedHub = document.getElementById('settingsHub').value;
-      const settings = { notificationsEnabled: document.getElementById('settingsNotifications').checked };
+      const currentProfile = readUserProfile();
+      const profile = {
+        name: document.getElementById('profileName').value.trim(),
+        role: currentProfile.role,
+        department: currentProfile.department,
+        email: document.getElementById('profileEmail').value.trim(),
+        phone: document.getElementById('profilePhone').value.trim(),
+        photo: window.profilePhotoDraft || ''
+      };
       try {
-        localStorage.setItem('WMS_USER_SETTINGS', JSON.stringify(settings));
+        localStorage.setItem('WMS_USER_PROFILE', JSON.stringify(profile));
       } catch (err) {
-        showToast('Pengaturan hanya berlaku sampai halaman ditutup.', 'warning');
+        showToast('Profil gagal disimpan. Coba gunakan foto yang lebih kecil.', 'error');
+        return;
       }
+      renderUserProfile();
       closeModal();
-      renderHeaderNotifications();
-      if (selectedHub !== state.globalHub) {
-        handleGlobalHubChange(selectedHub);
-      } else {
-        showToast('Pengaturan berhasil disimpan.');
-      }
+      showToast('Profil berhasil diperbarui.');
     }
 
     function requestLogout() {

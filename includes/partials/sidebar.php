@@ -119,12 +119,12 @@
   <div class="p-3 bg-white border-t border-slate-100">
     <div class="sidebar-user-card p-2.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-2">
       <div class="flex items-center gap-2.5 min-w-0">
-        <div class="w-9 h-9 rounded-full bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
+        <div id="sidebarProfileAvatar" class="w-9 h-9 rounded-full bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs overflow-hidden">
           <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         </div>
         <div class="truncate">
-          <p class="text-xs font-bold text-slate-900 truncate">Hendra Saputra</p>
-          <p class="text-[10px] text-slate-500 truncate">Administrator / Ka. Gudang</p>
+          <p class="text-xs font-bold text-slate-900 truncate" data-profile-name>Hendra Saputra</p>
+          <p class="text-[10px] text-slate-500 truncate" data-profile-role>Kepala Gudang</p>
         </div>
       </div>
       <button type="button" onclick="resetDemoData()" title="Reset Data Demo ke Awal" class="text-[10px] font-semibold px-2 py-1 rounded-lg bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 shrink-0 transition">
