@@ -1,24 +1,37 @@
+    let stockInView = 'history';
+
+    function openStockInForm() {
+      stockInView = 'form';
+      renderStockIn(document.getElementById('viewContainer'));
+    }
+
+    function openStockInHistory() {
+      stockInView = 'history';
+      renderStockIn(document.getElementById('viewContainer'));
+    }
+
     function renderStockIn(container) {
+      const showForm = stockInView === 'form';
       const pre = state.prefillStockIn || {};
       const selectedWhId = pre.warehouseId || (state.globalHub !== 'ALL' ? state.globalHub : 'WH-JKT-01');
       const selectedVendorId = pre.vendorId || state.vendors[0].id;
       const selectedItemId = pre.itemId || state.items[0].id;
       const defaultQty = pre.qty || 15;
-      state.prefillStockIn = null;
+      if (showForm) state.prefillStockIn = null;
 
       const inboundHistory = state.movements.filter(m => m.type === 'IN');
       const nextGrnNo = `GRN/GS-JKT/2026/${1102 + inboundHistory.length}`;
 
       container.innerHTML = `
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-fade">
+        <div class="space-y-6 animate-fade">
           
-          <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4 self-start">
+          <div class="${showForm ? '' : 'hidden'} w-full max-w-3xl mx-auto bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4 self-start">
             <div class="border-b border-slate-200 pb-3 flex items-center justify-between">
               <div>
                 <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold uppercase">Formulir Inbound / GRN</span>
                 <h3 class="text-base font-bold text-slate-900 mt-1">Input Penerimaan Barang Masuk</h3>
               </div>
-              <span class="font-mono text-xs font-bold text-slate-500">${nextGrnNo}</span>
+              <button type="button" onclick="openStockInHistory()" class="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Kembali ke riwayat</button>
             </div>
 
             <form onsubmit="submitStockInForm(event)" class="space-y-3.5 text-xs">
@@ -34,16 +47,12 @@
                 </select>
               </div>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="grid grid-cols-1 gap-3">
                 <div>
                   <label class="block font-semibold text-slate-700 mb-1">Pilih Gudang Tujuan *</label>
-                  <select id="stockInWarehouse" onchange="updateStockInZones()" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-emerald-600">
+                  <select id="stockInWarehouse" onchange="updateStockInItemHelper()" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-emerald-600">
                     ${state.warehouses.map(w => `<option value="${w.id}" ${w.id === selectedWhId ? 'selected' : ''}>${w.id} • ${w.name}</option>`).join('')}
                   </select>
-                </div>
-                <div>
-                  <label class="block font-semibold text-slate-700 mb-1">Zona / Rak Penyimpanan *</label>
-                  <select id="stockInZone" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono focus:outline-none focus:border-emerald-600"></select>
                 </div>
               </div>
 
@@ -79,13 +88,23 @@
           </div>
 
           
-          <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
+          <div class="${showForm ? 'hidden' : ''} bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <h3 class="text-sm font-bold text-slate-900">Riwayat Barang Masuk (Inbound Log / GRN)</h3>
                 <p class="text-xs text-slate-500">Daftar penerimaan barang dari vendor yang telah diverifikasi masuk ke gudang</p>
               </div>
-              <span class="px-2.5 py-1 rounded-full text-xs font-mono font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">${inboundHistory.length} Dokumen GRN</span>
+              <div class="flex flex-col sm:flex-row gap-2">
+                <label class="relative">
+                  <span class="sr-only">Cari riwayat barang masuk</span>
+                  <input id="stockInHistorySearch" type="search" oninput="filterStockInHistory(this.value)" placeholder="Cari GRN, barang, vendor, gudang..." class="w-full sm:w-64 rounded-lg border border-slate-200 bg-slate-50 py-2 pl-3 pr-3 text-xs focus:border-sky-500 focus:bg-white focus:outline-none" />
+                </label>
+                <button type="button" onclick="openStockInForm()" class="shrink-0 rounded-lg bg-emerald-600 px-3.5 py-2 text-xs font-semibold text-white hover:bg-emerald-700">+ Form Penerimaan</button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 text-xs">
+              <span class="text-slate-500">Daftar transaksi penerimaan</span>
+              <span id="stockInHistoryCount" class="rounded-full bg-emerald-50 px-2.5 py-1 font-semibold text-emerald-700">${inboundHistory.length} dokumen GRN</span>
             </div>
 
             <div class="overflow-x-auto">
@@ -100,49 +119,46 @@
                     <th class="py-2.5 px-3 text-right">Bukti</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
-                  ${inboundHistory.map(m => {
-                    const it = getItemById(m.itemId);
-                    return `
-                      <tr class="hover:bg-slate-50">
-                        <td class="py-3 px-3">
-                          <div class="font-mono font-bold text-slate-900">${m.docNo}</div>
-                          <div class="font-mono text-[10px] text-slate-500">${m.date}</div>
-                        </td>
-                        <td class="py-3 px-3">
-                          <div class="font-semibold text-slate-900">${it.name}</div>
-                          <div class="font-mono text-[10px] text-sky-700">${it.sku}</div>
-                        </td>
-                        <td class="py-3 px-3 text-slate-700">${m.recipientOrSource}</td>
-                        <td class="py-3 px-3">
-                          <span class="font-semibold text-slate-800">${m.warehouseId}</span>
-                          <span class="text-[11px] font-mono text-slate-500 block">Rak: ${m.zoneCode}</span>
-                        </td>
-                        <td class="py-3 px-3 text-right font-mono font-bold text-emerald-600">+${m.qty} ${it.unit}</td>
-                        <td class="py-3 px-3 text-right">
-                          <button type="button" onclick="showTransactionDetailModal('${m.id}')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-sky-50 text-sky-700 font-semibold text-[11px]">Cetak GRN</button>
-                        </td>
-                      </tr>
-                    `;
-                  }).join('')}
-                </tbody>
+                <tbody id="stockInHistoryBody" class="divide-y divide-slate-100">${renderStockInHistoryRows(inboundHistory)}</tbody>
               </table>
             </div>
           </div>
         </div>
       `;
 
-      updateStockInZones();
       updateStockInItemHelper();
     }
 
-    function updateStockInZones() {
-      const whId = document.getElementById('stockInWarehouse')?.value;
-      const zoneSelect = document.getElementById('stockInZone');
-      if (!whId || !zoneSelect) return;
-      const wh = getWarehouseById(whId);
-      zoneSelect.innerHTML = wh.zones.map(z => `<option value="${z.code}">${z.code} — ${z.name}</option>`).join('');
-      updateStockInItemHelper();
+    function renderStockInHistoryRows(rows) {
+      if (!rows.length) return '<tr><td colspan="6" class="py-10 text-center text-slate-400">Tidak ada riwayat yang cocok.</td></tr>';
+      return rows.map(m => {
+        const item = getItemById(m.itemId);
+        return `
+          <tr class="hover:bg-slate-50">
+            <td class="py-3 px-3"><div class="font-mono font-bold text-slate-900">${m.docNo}</div><div class="font-mono text-[10px] text-slate-500">${m.date}</div></td>
+            <td class="py-3 px-3"><div class="font-semibold text-slate-900">${item.name}</div><div class="font-mono text-[10px] text-sky-700">${item.sku}</div></td>
+            <td class="py-3 px-3 text-slate-700">${m.recipientOrSource || '-'}</td>
+            <td class="py-3 px-3"><span class="font-semibold text-slate-800">${m.warehouseId}</span></td>
+            <td class="py-3 px-3 text-right font-mono font-bold text-emerald-600">+${m.qty} ${item.unit}</td>
+            <td class="py-3 px-3 text-right"><button type="button" onclick="showTransactionDetailModal('${m.id}')" class="rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-sky-700 hover:bg-sky-50">Cetak GRN</button></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterStockInHistory(query) {
+      const term = String(query || '').trim().toLowerCase();
+      const rows = state.movements.filter(m => {
+        if (m.type !== 'IN') return false;
+        const item = getItemById(m.itemId);
+        const vendor = getVendorById(m.vendorId);
+        return [m.docNo, m.date, m.warehouseId, m.recipientOrSource, item.name, item.sku, vendor.name]
+          .some(value => String(value || '').toLowerCase().includes(term));
+      });
+      const body = document.getElementById('stockInHistoryBody');
+      const count = document.getElementById('stockInHistoryCount');
+      if (body) body.innerHTML = renderStockInHistoryRows(rows);
+      if (count) count.textContent = `${rows.length} dokumen GRN`;
     }
 
     function updateStockInItemHelper() {
@@ -160,7 +176,6 @@
       const docNo = document.getElementById('stockInDocNo').value.trim();
       const vendorId = document.getElementById('stockInVendor').value;
       const warehouseId = document.getElementById('stockInWarehouse').value;
-      const zoneCode = document.getElementById('stockInZone').value;
       const itemId = document.getElementById('stockInItem').value;
       const qty = Number(document.getElementById('stockInQty').value) || 0;
       const date = document.getElementById('stockInDate').value.trim();
@@ -174,8 +189,6 @@
       const item = getItemById(itemId);
       const vendor = getVendorById(vendorId);
       item.stockByWh[warehouseId] = Number(item.stockByWh[warehouseId] || 0) + qty;
-      if (!item.rackLocation) item.rackLocation = {};
-      item.rackLocation[warehouseId] = zoneCode;
 
       const newTrx = {
         id: `TRX-${Date.now()}`,
@@ -185,7 +198,6 @@
         itemId,
         qty,
         warehouseId,
-        zoneCode,
         vendorId,
         recipientOrSource: vendor.name,
         operator: 'Hendra Saputra',
@@ -193,7 +205,8 @@
       };
       state.movements.unshift(newTrx);
       saveState();
+      stockInView = 'history';
       renderStockIn(document.getElementById('viewContainer'));
-      showToast(`Penerimaan ${qty} ${item.unit} ${item.name} ke ${warehouseId} (${zoneCode}) berhasil disimpan!`, 'success');
+      showToast(`Penerimaan ${qty} ${item.unit} ${item.name} ke ${warehouseId} berhasil disimpan!`, 'success');
     }
 

@@ -163,16 +163,15 @@
 
           
           <div>
-            <h5 class="font-bold text-slate-800 mb-2">Sebaran Stok & Lokasi Penyimpanan per Gudang</h5>
+            <h5 class="font-bold text-slate-800 mb-2">Sebaran Stok per Gudang</h5>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               ${state.warehouses.map(wh => {
                 const q = Number(item.stockByWh[wh.id] || 0);
-                const rack = (item.rackLocation && item.rackLocation[wh.id]) || wh.zones[0]?.code || 'Z-01';
                 return `
                   <div class="p-3 rounded-xl border border-slate-200 flex items-center justify-between">
                     <div>
                       <div class="font-semibold text-slate-800">${wh.name}</div>
-                      <div class="text-[11px] text-slate-500">Kode Gudang: ${wh.id} • Rak: <span class="font-mono font-semibold text-slate-700">${rack}</span></div>
+                      <div class="text-[11px] text-slate-500">Kode Gudang: ${wh.id}</div>
                     </div>
                     <div class="font-mono font-bold text-sm ${q === 0 ? 'text-rose-600' : 'text-slate-900'}">${q} ${item.unit}</div>
                   </div>
@@ -255,8 +254,7 @@
         basePrice: 250000,
         preferredVendorId: state.vendors[0]?.id || 'VND-001',
         specs: '',
-        stockByWh: { 'WH-JKT-01': 25, 'WH-JKT-02': 0, 'WH-MDN-01': 0, 'WH-SBY-01': 0 },
-        rackLocation: { 'WH-JKT-01': 'Z-A01', 'WH-JKT-02': 'DG-A1', 'WH-MDN-01': 'BLW-01', 'WH-SBY-01': 'PRK-A1' }
+        stockByWh: { 'WH-JKT-01': 25, 'WH-JKT-02': 0, 'WH-MDN-01': 0, 'WH-SBY-01': 0 }
       };
 
       const html = `
@@ -303,7 +301,7 @@
           </div>
 
           <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-            <div class="font-bold text-slate-800">Stok Awal / Koreksi Stok & Lokasi Rak per Gudang</div>
+            <div class="font-bold text-slate-800">Stok Awal / Koreksi Stok per Gudang</div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               ${state.warehouses.map(wh => `
                 <div class="p-2.5 bg-white rounded-lg border border-slate-200 flex items-center justify-between gap-2">
@@ -360,7 +358,6 @@
           id: newId,
           sku, name, category, unit, minStock, basePrice, preferredVendorId, specs,
           stockByWh,
-          rackLocation: { 'WH-JKT-01': 'Z-A01', 'WH-JKT-02': 'DG-A1', 'WH-MDN-01': 'BLW-01', 'WH-SBY-01': 'PRK-A1' },
           vendorOffers: [
             { vendorId: preferredVendorId, price: basePrice, moq: 5, leadTime: 3, quoteNo: `QT/NEW/2026/${state.items.length + 1}`, validUntil: '2026-12-31', warranty: '12 Bulan', isPreferred: true }
           ]

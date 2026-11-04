@@ -5,7 +5,6 @@
       globalHub: 'ALL',
       inventorySubTab: 'list', // 'list' | 'categories' | 'vendorPricing'
       warehouseSelectedId: 'WH-JKT-01',
-      warehouseSubTab: 'list', // 'list' | 'locations' | 'stockByWh'
       reportSubTab: 'valuation', // 'valuation' | 'movement' | 'warehouseCap' | 'vendorPerf'
 
       categories: [
@@ -36,14 +35,8 @@
           phone: '+62-21-4390-4902',
           capacityPallet: 1200,
           usedPallet: 920,
-          temperature: '-18°C s/d +24°C (Multi-Zone)',
-          status: 'Operasional Aktif',
-          zones: [
-            { code: 'Z-A01', name: 'Zona A01 • Reefer Sparepart Rack', type: 'Dry Controlled (20°C)', capacity: 300, used: 245 },
-            { code: 'Z-B02', name: 'Zona B02 • MHE Heavy Duty Bay', type: 'Heavy Floor Rack', capacity: 350, used: 280 },
-            { code: 'Z-C01', name: 'Zona C01 • TPFT Quarantine & Seal Vault', type: 'High Security', capacity: 250, used: 195 },
-            { code: 'Z-D04', name: 'Zona D04 • Cold Chain Consumables', type: 'Chilled (+4°C)', capacity: 300, used: 200 }
-          ]
+          temperature: '-18°C s/d +24°C',
+          status: 'Operasional Aktif'
         },
         {
           id: 'WH-JKT-02',
@@ -56,12 +49,7 @@
           capacityPallet: 850,
           usedPallet: 610,
           temperature: 'Ambient (28°C)',
-          status: 'Operasional Aktif',
-          zones: [
-            { code: 'DG-A1', name: 'Digul A1 • Reachstacker & Tire Bay', type: 'Heavy Floor', capacity: 400, used: 310 },
-            { code: 'DG-B1', name: 'Digul B1 • Hydraulic & Lubricant Store', type: 'Hazmat Bunded', capacity: 250, used: 170 },
-            { code: 'DG-C1', name: 'Digul C1 • Pallet & Packaging Bulk', type: 'Bulk Stacking', capacity: 200, used: 130 }
-          ]
+          status: 'Operasional Aktif'
         },
         {
           id: 'WH-MDN-01',
@@ -74,11 +62,7 @@
           capacityPallet: 650,
           usedPallet: 430,
           temperature: '-15°C s/d Ambient',
-          status: 'Operasional Aktif',
-          zones: [
-            { code: 'BLW-01', name: 'Belawan 01 • Reefer & Electrical Rack', type: 'Dry Rack', capacity: 350, used: 240 },
-            { code: 'BLW-02', name: 'Belawan 02 • Quarantine Inspection Store', type: 'Secure Room', capacity: 300, used: 190 }
-          ]
+          status: 'Operasional Aktif'
         },
         {
           id: 'WH-SBY-01',
@@ -91,11 +75,7 @@
           capacityPallet: 900,
           usedPallet: 685,
           temperature: '-20°C s/d +25°C',
-          status: 'Operasional Aktif',
-          zones: [
-            { code: 'PRK-A1', name: 'Perak A1 • Cold Chain & Reefer Bay', type: 'Controlled', capacity: 450, used: 360 },
-            { code: 'PRK-B2', name: 'Perak B2 • MHE & General Logistics', type: 'High Rack', capacity: 450, used: 325 }
-          ]
+          status: 'Operasional Aktif'
         }
       ],
 
@@ -210,7 +190,6 @@
           preferredVendorId: 'VND-001',
           specs: '4-Pin 3h, 380-440V AC, IP67 Watertight untuk Monitoring Reefer Yard TPFT',
           stockByWh: { 'WH-JKT-01': 68, 'WH-JKT-02': 12, 'WH-MDN-01': 24, 'WH-SBY-01': 32 },
-          rackLocation: { 'WH-JKT-01': 'Z-A01', 'WH-JKT-02': 'DG-A1', 'WH-MDN-01': 'BLW-01', 'WH-SBY-01': 'PRK-A1' },
           vendorOffers: [
             { vendorId: 'VND-001', price: 875000, moq: 10, leadTime: 3, quoteNo: 'QT/STR/2026/104', validUntil: '2026-12-31', warranty: '12 Bulan', isPreferred: true },
             { vendorId: 'VND-005', price: 910000, moq: 5, leadTime: 2, quoteNo: 'QT/EKO/2026/088', validUntil: '2026-12-15', warranty: '6 Bulan', isPreferred: false }
@@ -227,7 +206,6 @@
           preferredVendorId: 'VND-001',
           specs: 'Akurasi ±0.1°C, Kabel 12m Heavy-Duty, Kompatibel Kontainer Karantina Buah/Daging',
           stockByWh: { 'WH-JKT-01': 16, 'WH-JKT-02': 0, 'WH-MDN-01': 8, 'WH-SBY-01': 6 },
-          rackLocation: { 'WH-JKT-01': 'Z-A01', 'WH-JKT-02': 'DG-A1', 'WH-MDN-01': 'BLW-01', 'WH-SBY-01': 'PRK-A1' },
           vendorOffers: [
             { vendorId: 'VND-001', price: 1450000, moq: 5, leadTime: 3, quoteNo: 'QT/STR/2026/112', validUntil: '2026-12-31', warranty: '12 Bulan', isPreferred: true },
             { vendorId: 'VND-005', price: 1520000, moq: 5, leadTime: 4, quoteNo: 'QT/EKO/2026/095', validUntil: '2026-11-30', warranty: '12 Bulan', isPreferred: false }
@@ -244,7 +222,6 @@
           preferredVendorId: 'VND-003',
           specs: '1 Box = 100 Pcs, Anti-Spin, Laser Barcoded untuk Segel Ulang Pemeriksaan TPFT',
           stockByWh: { 'WH-JKT-01': 185, 'WH-JKT-02': 45, 'WH-MDN-01': 60, 'WH-SBY-01': 75 },
-          rackLocation: { 'WH-JKT-01': 'Z-C01', 'WH-JKT-02': 'DG-C1', 'WH-MDN-01': 'BLW-02', 'WH-SBY-01': 'PRK-A1' },
           vendorOffers: [
             { vendorId: 'VND-003', price: 680000, moq: 20, leadTime: 2, quoteNo: 'QT/SAP/2026/210', validUntil: '2026-12-31', warranty: 'Sertifikasi ISO 17712', isPreferred: true },
             { vendorId: 'VND-004', price: 725000, moq: 15, leadTime: 4, quoteNo: 'QT/PPL/2026/041', validUntil: '2026-12-20', warranty: 'Standar SNI', isPreferred: false }
@@ -261,7 +238,6 @@
           preferredVendorId: 'VND-002',
           specs: 'OEM Part Equivalen, Microglass 10 Micron, High Pressure Return Filter',
           stockByWh: { 'WH-JKT-01': 12, 'WH-JKT-02': 18, 'WH-MDN-01': 6, 'WH-SBY-01': 9 },
-          rackLocation: { 'WH-JKT-01': 'Z-B02', 'WH-JKT-02': 'DG-A1', 'WH-MDN-01': 'BLW-01', 'WH-SBY-01': 'PRK-B2' },
           vendorOffers: [
             { vendorId: 'VND-002', price: 2350000, moq: 4, leadTime: 5, quoteNo: 'QT/TMN/2026/077', validUntil: '2026-12-31', warranty: '6 Bulan / 1000 HM', isPreferred: true }
           ]
@@ -277,7 +253,6 @@
           preferredVendorId: 'VND-002',
           specs: '3-Stage Compound Non-Marking / Heat Resistant untuk Operasional Dalam Gudang & Ramp',
           stockByWh: { 'WH-JKT-01': 4, 'WH-JKT-02': 6, 'WH-MDN-01': 2, 'WH-SBY-01': 2 },
-          rackLocation: { 'WH-JKT-01': 'Z-B02', 'WH-JKT-02': 'DG-A1', 'WH-MDN-01': 'BLW-01', 'WH-SBY-01': 'PRK-B2' },
           vendorOffers: [
             { vendorId: 'VND-002', price: 3850000, moq: 4, leadTime: 5, quoteNo: 'QT/TMN/2026/082', validUntil: '2026-12-31', warranty: '12 Bulan', isPreferred: true }
           ]
@@ -293,7 +268,6 @@
           preferredVendorId: 'VND-004',
           specs: 'Static Load 4 Ton, Dynamic 1.5 Ton, Racking 1.2 Ton dengan 4 Steel Bars Food/Cold Grade',
           stockByWh: { 'WH-JKT-01': 120, 'WH-JKT-02': 55, 'WH-MDN-01': 40, 'WH-SBY-01': 65 },
-          rackLocation: { 'WH-JKT-01': 'Z-D04', 'WH-JKT-02': 'DG-C1', 'WH-MDN-01': 'BLW-02', 'WH-SBY-01': 'PRK-B2' },
           vendorOffers: [
             { vendorId: 'VND-004', price: 640000, moq: 25, leadTime: 4, quoteNo: 'QT/PPL/2026/019', validUntil: '2026-12-31', warranty: '24 Bulan Pemakaian Normal', isPreferred: true },
             { vendorId: 'VND-003', price: 675000, moq: 20, leadTime: 3, quoteNo: 'QT/SAP/2026/219', validUntil: '2026-12-15', warranty: '12 Bulan', isPreferred: false }
@@ -310,7 +284,6 @@
           preferredVendorId: 'VND-003',
           specs: 'Termasuk Celana Bib, Sarung Tangan Polar & Penutup Kepala untuk Tim Behandle Reefer',
           stockByWh: { 'WH-JKT-01': 18, 'WH-JKT-02': 4, 'WH-MDN-01': 6, 'WH-SBY-01': 8 },
-          rackLocation: { 'WH-JKT-01': 'Z-C01', 'WH-JKT-02': 'DG-C1', 'WH-MDN-01': 'BLW-02', 'WH-SBY-01': 'PRK-A1' },
           vendorOffers: [
             { vendorId: 'VND-003', price: 790000, moq: 10, leadTime: 2, quoteNo: 'QT/SAP/2026/225', validUntil: '2026-12-31', warranty: '6 Bulan Jahitan & Zipper', isPreferred: true }
           ]
@@ -326,7 +299,6 @@
           preferredVendorId: 'VND-005',
           specs: '1 Box = 10 Unit Logger PDF Otomatis, Rentang -30°C s/d +70°C, Sertifikat Kalibrasi',
           stockByWh: { 'WH-JKT-01': 25, 'WH-JKT-02': 5, 'WH-MDN-01': 9, 'WH-SBY-01': 12 },
-          rackLocation: { 'WH-JKT-01': 'Z-A01', 'WH-JKT-02': 'DG-B1', 'WH-MDN-01': 'BLW-01', 'WH-SBY-01': 'PRK-A1' },
           vendorOffers: [
             { vendorId: 'VND-005', price: 1950000, moq: 5, leadTime: 3, quoteNo: 'QT/EKO/2026/103', validUntil: '2026-12-31', warranty: '12 Bulan', isPreferred: true },
             { vendorId: 'VND-001', price: 2050000, moq: 5, leadTime: 3, quoteNo: 'QT/STR/2026/128', validUntil: '2026-12-31', warranty: '12 Bulan', isPreferred: false }
@@ -343,7 +315,6 @@
           preferredVendorId: 'VND-006',
           specs: 'Oli Hidrolik Performa Tinggi untuk Spreader Reachstacker & Forklift Gudang',
           stockByWh: { 'WH-JKT-01': 140, 'WH-JKT-02': 220, 'WH-MDN-01': 80, 'WH-SBY-01': 100 },
-          rackLocation: { 'WH-JKT-01': 'Z-B02', 'WH-JKT-02': 'DG-B1', 'WH-MDN-01': 'BLW-01', 'WH-SBY-01': 'PRK-B2' },
           vendorOffers: [
             { vendorId: 'VND-006', price: 48000, moq: 100, leadTime: 2, quoteNo: 'QT/PLB/2026/055', validUntil: '2026-12-31', warranty: 'Keaslian Distributor Resmi', isPreferred: true },
             { vendorId: 'VND-002', price: 52000, moq: 60, leadTime: 4, quoteNo: 'QT/TMN/2026/090', validUntil: '2026-12-15', warranty: 'Standar OEM', isPreferred: false }
@@ -360,7 +331,6 @@
           preferredVendorId: 'VND-004',
           specs: 'Berat 15 Kg/Roll, Daya Regang 250% untuk Wrapping Kargo Pasca Pemeriksaan Karantina',
           stockByWh: { 'WH-JKT-01': 90, 'WH-JKT-02': 30, 'WH-MDN-01': 22, 'WH-SBY-01': 38 },
-          rackLocation: { 'WH-JKT-01': 'Z-D04', 'WH-JKT-02': 'DG-C1', 'WH-MDN-01': 'BLW-02', 'WH-SBY-01': 'PRK-B2' },
           vendorOffers: [
             { vendorId: 'VND-004', price: 185000, moq: 30, leadTime: 4, quoteNo: 'QT/PPL/2026/032', validUntil: '2026-12-31', warranty: 'Ganti Baru Jika Cacat Gulung', isPreferred: true }
           ]
@@ -376,7 +346,6 @@
           itemId: 'ITM-001',
           qty: 30,
           warehouseId: 'WH-JKT-01',
-          zoneCode: 'Z-A01',
           vendorId: 'VND-001',
           recipientOrSource: 'PT. Samudera Teknik Reeferindo (PO-2026-881)',
           operator: 'Hendra Saputra',
@@ -390,7 +359,6 @@
           itemId: 'ITM-003',
           qty: 25,
           warehouseId: 'WH-JKT-01',
-          zoneCode: 'Z-C01',
           vendorId: null,
           recipientOrSource: 'Tim Pemeriksaan Fisik Terpadu (TPFT) Blok B - Karantina',
           operator: 'Fajar Ramadhan',
@@ -404,7 +372,6 @@
           itemId: 'ITM-009',
           qty: 120,
           warehouseId: 'WH-JKT-02',
-          zoneCode: 'DG-B1',
           vendorId: 'VND-006',
           recipientOrSource: 'PT. Petro Lubrikan Bahari (PO-2026-875)',
           operator: 'Bambang Wijaya',
@@ -418,7 +385,6 @@
           itemId: 'ITM-010',
           qty: 12,
           warehouseId: 'WH-SBY-01',
-          zoneCode: 'PRK-B2',
           vendorId: null,
           recipientOrSource: 'Area Behandle Cold Storage Tanjung Perak',
           operator: 'Rina Kusumawardhani',
@@ -433,7 +399,6 @@
           qty: 5,
           warehouseId: 'WH-JKT-01',
           targetWarehouseId: 'WH-MDN-01',
-          zoneCode: 'Z-A01 -> BLW-01',
           vendorId: null,
           recipientOrSource: 'Mutasi Antar Hub: TPFT Priok ke Hub Belawan Medan',
           operator: 'Hendra Saputra',
@@ -447,7 +412,6 @@
           itemId: 'ITM-006',
           qty: 50,
           warehouseId: 'WH-JKT-01',
-          zoneCode: 'Z-D04',
           vendorId: 'VND-004',
           recipientOrSource: 'CV. Prima Pallet & Packaging Logistik (PO-2026-860)',
           operator: 'Fajar Ramadhan',
@@ -461,7 +425,6 @@
           itemId: 'ITM-004',
           qty: 4,
           warehouseId: 'WH-JKT-02',
-          zoneCode: 'DG-A1',
           vendorId: null,
           recipientOrSource: 'Workshop MHE Digul - Unit Kalmar RS-04 & RS-07',
           operator: 'Bambang Wijaya',
@@ -489,7 +452,11 @@
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
           const parsed = JSON.parse(raw);
-          return Object.assign({}, JSON.parse(JSON.stringify(DEFAULT_STATE)), parsed);
+          const loaded = Object.assign({}, JSON.parse(JSON.stringify(DEFAULT_STATE)), parsed);
+          loaded.warehouses.forEach(warehouse => delete warehouse.zones);
+          loaded.items.forEach(item => delete item.rackLocation);
+          loaded.movements.forEach(movement => delete movement.zoneCode);
+          return loaded;
         }
       } catch (err) {
         console.warn('Storage fallback used:', err);

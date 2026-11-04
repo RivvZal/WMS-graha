@@ -1,18 +1,31 @@
+    let stockOutView = 'history';
+
+    function openStockOutForm() {
+      stockOutView = 'form';
+      renderStockOut(document.getElementById('viewContainer'));
+    }
+
+    function openStockOutHistory() {
+      stockOutView = 'history';
+      renderStockOut(document.getElementById('viewContainer'));
+    }
+
     function renderStockOut(container) {
+      const showForm = stockOutView === 'form';
       const outboundHistory = state.movements.filter(m => m.type === 'OUT');
       const nextDoNo = `DO/GS-JKT/2026/${895 + outboundHistory.length}`;
       const defaultWh = state.globalHub !== 'ALL' ? state.globalHub : 'WH-JKT-01';
 
       container.innerHTML = `
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-fade">
+        <div class="space-y-6 animate-fade">
           
-          <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4 self-start">
+          <div class="${showForm ? '' : 'hidden'} w-full max-w-3xl mx-auto bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4 self-start">
             <div class="border-b border-slate-200 pb-3 flex items-center justify-between">
               <div>
                 <span class="px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold uppercase">Formulir Outbound / DO</span>
                 <h3 class="text-base font-bold text-slate-900 mt-1">Input Pengeluaran Barang (Stock Out)</h3>
               </div>
-              <span class="font-mono text-xs font-bold text-slate-500">${nextDoNo}</span>
+              <button type="button" onclick="openStockOutHistory()" class="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Kembali ke riwayat</button>
             </div>
 
             <form onsubmit="submitStockOutForm(event)" class="space-y-3.5 text-xs">
@@ -65,13 +78,23 @@
           </div>
 
           
-          <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
+          <div class="${showForm ? 'hidden' : ''} bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <h3 class="text-sm font-bold text-slate-900">Riwayat Barang Keluar (Outbound Log / DO)</h3>
                 <p class="text-xs text-slate-500">Daftar pengeluaran barang dari gudang ke unit operasional atau penerima</p>
               </div>
-              <span class="px-2.5 py-1 rounded-full text-xs font-mono font-semibold bg-amber-50 text-amber-700 border border-amber-200">${outboundHistory.length} Dokumen DO</span>
+              <div class="flex flex-col sm:flex-row gap-2">
+                <label class="relative">
+                  <span class="sr-only">Cari riwayat barang keluar</span>
+                  <input id="stockOutHistorySearch" type="search" oninput="filterStockOutHistory(this.value)" placeholder="Cari DO, barang, gudang, tujuan..." class="w-full sm:w-64 rounded-lg border border-slate-200 bg-slate-50 py-2 pl-3 pr-3 text-xs focus:border-sky-500 focus:bg-white focus:outline-none" />
+                </label>
+                <button type="button" onclick="openStockOutForm()" class="shrink-0 rounded-lg bg-amber-600 px-3.5 py-2 text-xs font-semibold text-white hover:bg-amber-700">+ Form Pengeluaran</button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 text-xs">
+              <span class="text-slate-500">Daftar transaksi pengeluaran</span>
+              <span id="stockOutHistoryCount" class="rounded-full bg-amber-50 px-2.5 py-1 font-semibold text-amber-700">${outboundHistory.length} dokumen DO</span>
             </div>
 
             <div class="overflow-x-auto">
@@ -86,38 +109,44 @@
                     <th class="py-2.5 px-3 text-right">Surat Jalan</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
-                  ${outboundHistory.map(m => {
-                    const it = getItemById(m.itemId);
-                    return `
-                      <tr class="hover:bg-slate-50">
-                        <td class="py-3 px-3">
-                          <div class="font-mono font-bold text-slate-900">${m.docNo}</div>
-                          <div class="font-mono text-[10px] text-slate-500">${m.date}</div>
-                        </td>
-                        <td class="py-3 px-3">
-                          <div class="font-semibold text-slate-900">${it.name}</div>
-                          <div class="font-mono text-[10px] text-sky-700">${it.sku}</div>
-                        </td>
-                        <td class="py-3 px-3">
-                          <span class="font-semibold text-slate-800">${m.warehouseId}</span>
-                          <span class="text-[10px] font-mono text-slate-500 block">Rak: ${m.zoneCode}</span>
-                        </td>
-                        <td class="py-3 px-3 text-slate-700">${m.recipientOrSource}</td>
-                        <td class="py-3 px-3 text-right font-mono font-bold text-amber-600">-${m.qty} ${it.unit}</td>
-                        <td class="py-3 px-3 text-right">
-                          <button type="button" onclick="showTransactionDetailModal('${m.id}')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-amber-50 text-amber-700 font-semibold text-[11px]">Cetak DO</button>
-                        </td>
-                      </tr>
-                    `;
-                  }).join('')}
-                </tbody>
+                <tbody id="stockOutHistoryBody" class="divide-y divide-slate-100">${renderStockOutHistoryRows(outboundHistory)}</tbody>
               </table>
             </div>
           </div>
         </div>
       `;
       updateStockOutHelper();
+    }
+
+    function renderStockOutHistoryRows(rows) {
+      if (!rows.length) return '<tr><td colspan="6" class="py-10 text-center text-slate-400">Tidak ada riwayat yang cocok.</td></tr>';
+      return rows.map(m => {
+        const item = getItemById(m.itemId);
+        return `
+          <tr class="hover:bg-slate-50">
+            <td class="py-3 px-3"><div class="font-mono font-bold text-slate-900">${m.docNo}</div><div class="font-mono text-[10px] text-slate-500">${m.date}</div></td>
+            <td class="py-3 px-3"><div class="font-semibold text-slate-900">${item.name}</div><div class="font-mono text-[10px] text-sky-700">${item.sku}</div></td>
+            <td class="py-3 px-3"><span class="font-semibold text-slate-800">${m.warehouseId}</span></td>
+            <td class="py-3 px-3 text-slate-700">${m.recipientOrSource || '-'}</td>
+            <td class="py-3 px-3 text-right font-mono font-bold text-amber-600">-${m.qty} ${item.unit}</td>
+            <td class="py-3 px-3 text-right"><button type="button" onclick="showTransactionDetailModal('${m.id}')" class="rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-amber-700 hover:bg-amber-50">Cetak DO</button></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterStockOutHistory(query) {
+      const term = String(query || '').trim().toLowerCase();
+      const rows = state.movements.filter(m => {
+        if (m.type !== 'OUT') return false;
+        const item = getItemById(m.itemId);
+        return [m.docNo, m.date, m.warehouseId, m.recipientOrSource, item.name, item.sku]
+          .some(value => String(value || '').toLowerCase().includes(term));
+      });
+      const body = document.getElementById('stockOutHistoryBody');
+      const count = document.getElementById('stockOutHistoryCount');
+      if (body) body.innerHTML = renderStockOutHistoryRows(rows);
+      if (count) count.textContent = `${rows.length} dokumen DO`;
     }
 
     function updateStockOutHelper() {
@@ -127,9 +156,8 @@
       if (!whId || !itemId || !banner) return;
       const item = getItemById(itemId);
       const avail = Number(item.stockByWh?.[whId] || 0);
-      const rack = item.rackLocation?.[whId] || 'Z-01';
       banner.innerHTML = `
-        <span>Stok Tersedia di <strong>${whId}</strong> (Rak <span class="font-mono">${rack}</span>):</span>
+        <span>Stok Tersedia di <strong>${whId}</strong>:</span>
         <span class="font-mono font-bold text-sm ${avail > 0 ? 'text-emerald-700' : 'text-rose-600'}">${avail} ${item.unit}</span>
       `;
     }
@@ -157,8 +185,6 @@
       }
 
       item.stockByWh[warehouseId] = avail - qty;
-      const zoneCode = item.rackLocation?.[warehouseId] || getWarehouseById(warehouseId).zones[0]?.code || 'Z-01';
-
       state.movements.unshift({
         id: `TRX-${Date.now()}`,
         docNo,
@@ -167,7 +193,6 @@
         itemId,
         qty,
         warehouseId,
-        zoneCode,
         vendorId: null,
         recipientOrSource,
         operator: 'Hendra Saputra',
@@ -175,6 +200,7 @@
       });
 
       saveState();
+      stockOutView = 'history';
       renderStockOut(document.getElementById('viewContainer'));
       showToast(`Pengeluaran ${qty} ${item.unit} ${item.name} dari ${warehouseId} berhasil dicatat!`, 'success');
     }

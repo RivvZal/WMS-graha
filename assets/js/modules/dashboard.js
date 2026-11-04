@@ -229,7 +229,7 @@
                     <th class="py-2.5 px-3">Waktu</th>
                     <th class="py-2.5 px-3">Tipe</th>
                     <th class="py-2.5 px-3">Barang / SKU</th>
-                    <th class="py-2.5 px-3">Gudang & Zona</th>
+                    <th class="py-2.5 px-3">Gudang</th>
                     <th class="py-2.5 px-3 text-right">Jumlah</th>
                     <th class="py-2.5 px-3">Vendor / Tujuan</th>
                     <th class="py-2.5 px-3 text-right">Detail</th>
@@ -256,7 +256,7 @@
                           <div class="font-medium text-slate-900">${item.name}</div>
                           <div class="text-[10px] font-mono text-slate-400">${item.sku}</div>
                         </td>
-                        <td class="py-2.5 px-3 text-slate-600">${wh.id} <span class="text-slate-400">(${m.zoneCode || '-'})</span></td>
+                        <td class="py-2.5 px-3 text-slate-600">${wh.id}</td>
                         <td class="py-2.5 px-3 text-right font-mono font-bold text-slate-900">${sign}${m.qty} ${item.unit}</td>
                         <td class="py-2.5 px-3 text-slate-600 truncate max-w-[200px]">${m.recipientOrSource}</td>
                         <td class="py-2.5 px-3 text-right">

@@ -37,7 +37,7 @@
                   <th class="py-3 px-3">Tanggal & Jam</th>
                   <th class="py-3 px-3">Tipe</th>
                   <th class="py-3 px-3">SKU & Nama Barang</th>
-                  <th class="py-3 px-3">Gudang / Lokasi Rak</th>
+                  <th class="py-3 px-3">Gudang</th>
                   <th class="py-3 px-3 text-right">Kuantitas</th>
                   <th class="py-3 px-3">Sumber / Tujuan & Catatan</th>
                   <th class="py-3 px-3">Operator</th>
@@ -95,7 +95,6 @@
             </td>
             <td class="py-3 px-3">
               <div class="font-semibold text-slate-800">${m.warehouseId}${m.targetWarehouseId ? ' → ' + m.targetWarehouseId : ''}</div>
-              <div class="font-mono text-[10px] text-slate-500">Zona: ${m.zoneCode}</div>
             </td>
             <td class="py-3 px-3 text-right font-mono font-bold text-slate-900">${sign}${m.qty} ${item.unit}</td>
             <td class="py-3 px-3 max-w-xs">
@@ -182,7 +181,6 @@
         qty,
         warehouseId: srcWh,
         targetWarehouseId: dstWh,
-        zoneCode: `${srcWh} -> ${dstWh}`,
         vendorId: null,
         recipientOrSource: `Mutasi Antar Hub: ${srcWh} ke ${dstWh}`,
         operator: 'Hendra Saputra',
@@ -216,9 +214,8 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div class="p-3 rounded-xl border border-slate-200">
-              <span class="text-[10px] font-bold uppercase text-slate-400">Fasilitas Gudang & Rak</span>
+              <span class="text-[10px] font-bold uppercase text-slate-400">Fasilitas Gudang</span>
               <p class="font-bold text-slate-900 mt-0.5">${wh.name} (${wh.id})</p>
-              <p class="font-mono text-[11px] text-sky-700">Lokasi Zona/Rak: ${m.zoneCode}</p>
             </div>
             <div class="p-3 rounded-xl border border-slate-200">
               <span class="text-[10px] font-bold uppercase text-slate-400">Vendor / Unit Penerima</span>

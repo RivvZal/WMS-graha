@@ -12,7 +12,7 @@
     }
 
     function getWarehouseById(whId) {
-      return state.warehouses.find(w => w.id === whId) || { id: whId, name: whId, zones: [] };
+      return state.warehouses.find(w => w.id === whId) || { id: whId, name: whId };
     }
 
     function getVendorById(vId) {
@@ -436,8 +436,8 @@
         subtitle: 'Daftar barang, detail spesifikasi, kategori/satuan, serta komparasi harga multi-vendor'
       },
       warehouse: {
-        title: 'Data Gudang & Lokasi Penyimpanan (Warehouse)',
-        subtitle: 'Manajemen cabang gudang PT. Graha Segara, denah zona/rak penyimpanan & distribusi stok'
+        title: 'Data Gudang (Warehouse)',
+        subtitle: 'Manajemen cabang gudang PT. Graha Segara, ringkasan fasilitas & distribusi stok'
       },
       vendors: {
         title: 'Vendor Management (Mitra Pemasok)',
@@ -449,7 +449,7 @@
       },
       stockin: {
         title: 'Stock In — Penerimaan Barang Masuk (Inbound / GRN)',
-        subtitle: 'Formulir input penerimaan barang dari vendor ke lokasi rak gudang & riwayat GRN'
+        subtitle: 'Formulir input penerimaan barang dari vendor ke gudang & riwayat GRN'
       },
       stockout: {
         title: 'Stock Out — Pengeluaran Barang (Outbound / DO)',
