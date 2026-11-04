@@ -18,7 +18,7 @@
                   <th class="py-3 px-3">ID User</th>
                   <th class="py-3 px-3">Nama Lengkap & Email</th>
                   <th class="py-3 px-3">Role / Jabatan Sistem</th>
-                  <th class="py-3 px-3">Otorisasi Gudang / Hub</th>
+                  <th class="py-3 px-3">Akses Gudang Divisi</th>
                   <th class="py-3 px-3">Login Terakhir</th>
                   <th class="py-3 px-3 text-center">Status Akun</th>
                   <th class="py-3 px-3 text-right">Aksi</th>
@@ -35,7 +35,7 @@
                     <td class="py-3 px-3">
                       <span class="px-2.5 py-0.5 rounded-md bg-sky-50 text-sky-800 border border-sky-200 font-medium text-[11px]">${u.role}</span>
                     </td>
-                    <td class="py-3 px-3 font-mono font-semibold text-slate-700">${u.hub === 'ALL' ? 'Semua Hub Nasional' : u.hub}</td>
+                    <td class="py-3 px-3 font-semibold text-slate-700">${u.hub === 'ALL' ? 'Semua Gudang Divisi' : (state.warehouses.find(wh => wh.id === u.hub)?.name || u.hub)}</td>
                     <td class="py-3 px-3 font-mono text-[11px] text-slate-500">${u.lastLogin}</td>
                     <td class="py-3 px-3 text-center">
                       <button type="button" onclick="toggleUserStatus('${u.id}')" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${u.status === 'Aktif' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-slate-500 border-slate-300'}">
@@ -69,7 +69,7 @@
         name: '',
         email: '',
         role: 'Supervisor Inbound & Outbound',
-        hub: 'WH-JKT-01',
+        hub: 'WH-GA-PROPERTY',
         status: 'Aktif'
       };
 
@@ -95,9 +95,9 @@
               </select>
             </div>
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">Otorisasi Cabang Gudang *</label>
+              <label class="block font-semibold text-slate-700 mb-1">Akses Gudang Divisi *</label>
               <select id="uFormHub" class="w-full px-3 py-2 rounded-xl border border-slate-300">
-                <option value="ALL" ${u.hub === 'ALL' ? 'selected' : ''}>Semua Hub Nasional (All Access)</option>
+                <option value="ALL" ${u.hub === 'ALL' ? 'selected' : ''}>Semua Gudang Divisi (All Access)</option>
                 ${state.warehouses.map(w => `<option value="${w.id}" ${w.id === u.hub ? 'selected' : ''}>${w.id} • ${w.name}</option>`).join('')}
               </select>
             </div>

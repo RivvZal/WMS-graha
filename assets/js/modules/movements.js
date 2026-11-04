@@ -20,7 +20,7 @@
                 <label class="block text-[11px] font-semibold text-slate-500 mb-1">Filter Gudang</label>
                 <select id="movWhFilter" onchange="filterMovementsTable()" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-sky-500">
                   <option value="ALL">Semua Gudang</option>
-                  ${state.warehouses.map(w => `<option value="${w.id}">${w.id} • ${w.name}</option>`).join('')}
+                  ${state.warehouses.filter(w => state.globalHub === 'ALL' || w.id === state.globalHub).map(w => `<option value="${w.id}">${w.name}</option>`).join('')}
                 </select>
               </div>
             </div>
@@ -67,8 +67,10 @@
           m.docNo.toLowerCase().includes(q) ||
           item.name.toLowerCase().includes(q) ||
           item.sku.toLowerCase().includes(q) ||
+          getWarehouseById(m.warehouseId).name.toLowerCase().includes(q) ||
+          (m.targetWarehouseId && getWarehouseById(m.targetWarehouseId).name.toLowerCase().includes(q)) ||
           (m.recipientOrSource || '').toLowerCase().includes(q);
-        return matchT && matchW && matchQ;
+        return movementMatchesWarehouseFilter(m) && matchT && matchW && matchQ;
       });
 
       if (list.length === 0) {
@@ -94,7 +96,7 @@
               <div class="font-mono text-[10px] text-sky-700">${item.sku}</div>
             </td>
             <td class="py-3 px-3">
-              <div class="font-semibold text-slate-800">${m.warehouseId}${m.targetWarehouseId ? ' → ' + m.targetWarehouseId : ''}</div>
+              <div class="font-semibold text-slate-800">${getWarehouseById(m.warehouseId).name}${m.targetWarehouseId ? ' → ' + getWarehouseById(m.targetWarehouseId).name : ''}</div>
             </td>
             <td class="py-3 px-3 text-right font-mono font-bold text-slate-900">${sign}${m.qty} ${item.unit}</td>
             <td class="py-3 px-3 max-w-xs">
@@ -129,7 +131,7 @@
             <div class="sm:col-span-2">
               <label class="block font-semibold text-slate-700 mb-1">Pilih Barang yang Dimutasi *</label>
               <select id="trfItem" class="w-full px-3 py-2 rounded-xl border border-slate-300">
-                ${state.items.map(it => `<option value="${it.id}">${it.sku} — ${it.name} (Stok Priok: ${it.stockByWh['WH-JKT-01'] || 0} ${it.unit})</option>`).join('')}
+                ${state.items.map(it => `<option value="${it.id}">${it.sku} — ${it.name} (Stok total: ${getItemTotalStock(it, 'ALL')} ${it.unit})</option>`).join('')}
               </select>
             </div>
             <div>
@@ -138,7 +140,7 @@
             </div>
             <div>
               <label class="block font-semibold text-slate-700 mb-1">Keterangan Mutasi</label>
-              <input id="trfNotes" type="text" value="Realokasi stok operasional antar hub pelabuhan" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
+              <input id="trfNotes" type="text" value="Realokasi stok operasional antar gudang divisi" class="w-full px-3 py-2 rounded-xl border border-slate-300" />
             </div>
           </div>
           <div class="flex justify-end gap-2 pt-3 border-t border-slate-200">
@@ -182,7 +184,7 @@
         warehouseId: srcWh,
         targetWarehouseId: dstWh,
         vendorId: null,
-        recipientOrSource: `Mutasi Antar Hub: ${srcWh} ke ${dstWh}`,
+        recipientOrSource: `Mutasi antar gudang: ${srcWh} ke ${dstWh}`,
         operator: 'Hendra Saputra',
         notes
       });
@@ -198,16 +200,21 @@
       if (!m) return;
       const item = getItemById(m.itemId);
       const wh = getWarehouseById(m.warehouseId);
+      const inboundPriceKnown = m.type === 'IN' && m.unitPrice != null;
+      const displayedPrice = inboundPriceKnown ? Number(m.unitPrice) : null;
+      const transactionValue = m.type === 'IN'
+        ? (inboundPriceKnown ? formatRupiah(Number(m.qty) * displayedPrice) : 'Belum dicatat')
+        : formatRupiah(Number(m.qty) * Number(item.basePrice || 0));
 
       const html = `
         <div class="space-y-4 text-xs">
-          <div class="p-4 rounded-xl border-2 border-slate-800 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div class="p-4 rounded-xl border border-sky-200 bg-sky-50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <div class="font-extrabold text-sm text-slate-900">PT. GRAHA SEGARA — WAREHOUSE MANAGEMENT SYSTEM</div>
-              <div class="text-[11px] text-slate-500">Jl. Timor Raya No. 1, Koja, Tanjung Priok, Jakarta Utara</div>
+              <div class="text-[11px] text-slate-500">Manajemen persediaan gudang divisi</div>
             </div>
             <div class="text-left sm:text-right">
-              <span class="px-2.5 py-0.5 rounded bg-slate-900 text-white font-mono font-bold text-xs">${m.docNo}</span>
+              <span class="px-2.5 py-0.5 rounded bg-sky-100 text-sky-800 font-mono font-bold text-xs">${m.docNo}</span>
               <div class="text-[11px] text-slate-500 font-mono mt-1">Tanggal: ${m.date}</div>
             </div>
           </div>
@@ -230,16 +237,20 @@
                 <tr class="bg-slate-100 border-b border-slate-200 text-[10px] uppercase text-slate-600">
                   <th class="py-2 px-3">Kode SKU</th>
                   <th class="py-2 px-3">Deskripsi Barang</th>
+                  <th class="py-2 px-3">Tanggal Produksi</th>
                   <th class="py-2 px-3 text-right">Kuantitas</th>
-                  <th class="py-2 px-3 text-right">Estimasi Nilai</th>
+                  <th class="py-2 px-3 text-right">Harga / Unit</th>
+                  <th class="py-2 px-3 text-right">Nilai Barang</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td class="py-3 px-3 font-mono font-bold text-sky-700">${item.sku}</td>
                   <td class="py-3 px-3 font-semibold text-slate-900">${item.name}</td>
+                  <td class="py-3 px-3">${m.type === 'IN' ? (m.productionDate || 'Belum dicatat') : '—'}</td>
                   <td class="py-3 px-3 text-right font-mono font-bold text-sm">${m.qty} ${item.unit}</td>
-                  <td class="py-3 px-3 text-right font-mono">${formatRupiah(m.qty * item.basePrice)}</td>
+                  <td class="py-3 px-3 text-right font-mono">${m.type === 'IN' ? (inboundPriceKnown ? formatRupiah(displayedPrice) : 'Belum dicatat') : '—'}</td>
+                  <td class="py-3 px-3 text-right font-mono">${transactionValue}</td>
                 </tr>
               </tbody>
             </table>

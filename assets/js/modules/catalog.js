@@ -102,7 +102,7 @@
                 Pilih Vendor Ini
               </button>
             ` : `
-              <button type="button" onclick="state.prefillStockIn={itemId:'${item.id}', vendorId:'${vendor.id}', qty:${off.moq}}; switchPage('stockin')" class="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
+              <button type="button" onclick="openStockInForm({itemId:'${item.id}', vendorId:'${vendor.id}', qty:${off.moq}})" class="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
                 Order / Stock In →
               </button>
             `}
@@ -119,15 +119,15 @@
 
       const html = `
         <div class="space-y-4 text-xs">
-          <div class="p-4 rounded-xl bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div class="p-4 rounded-xl border border-sky-200 bg-sky-50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <span class="text-[10px] uppercase tracking-wider text-sky-400 font-bold">Dokumen Kuotasi Harga Vendor</span>
-              <h4 class="text-base font-bold font-mono mt-0.5">${off.quoteNo}</h4>
-              <p class="text-slate-300 text-[11px]">Berlaku s/d: ${off.validUntil} • Termin: ${vendor.paymentTerms}</p>
+              <span class="text-[10px] uppercase tracking-wider text-sky-700 font-bold">Dokumen Kuotasi Harga Vendor</span>
+              <h4 class="text-base font-bold font-mono mt-0.5 text-slate-900">${off.quoteNo}</h4>
+              <p class="text-slate-600 text-[11px]">Berlaku s/d: ${off.validUntil} • Termin: ${vendor.paymentTerms}</p>
             </div>
             <div class="text-left sm:text-right">
-              <span class="text-[11px] text-slate-300 block">Harga Kontrak Satuan</span>
-              <span class="text-xl font-extrabold text-emerald-400 font-mono">${formatRupiah(off.price)} / ${item.unit}</span>
+              <span class="text-[11px] text-slate-500 block">Harga Kontrak Satuan</span>
+              <span class="text-xl font-extrabold text-emerald-700 font-mono">${formatRupiah(off.price)} / ${item.unit}</span>
             </div>
           </div>
 
@@ -169,7 +169,7 @@
                 Tetapkan Sebagai Vendor Utama
               </button>
             ` : ''}
-            <button type="button" onclick="closeModal(); state.prefillStockIn={itemId:'${item.id}', vendorId:'${vendor.id}', qty:${off.moq}}; switchPage('stockin')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
+            <button type="button" onclick="closeModal(); openStockInForm({itemId:'${item.id}', vendorId:'${vendor.id}', qty:${off.moq}})" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
               Lanjut ke Penerimaan Barang (Stock In)
             </button>
             <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-semibold">Tutup</button>

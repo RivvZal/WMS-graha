@@ -42,7 +42,7 @@
             <div>
               <div class="flex items-center justify-between gap-2 mb-2">
                 <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-mono text-[10px] font-bold">${v.id}</span>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">${v.status} • ★ ${v.rating}</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">${v.status}</span>
               </div>
               <h3 class="text-sm font-bold text-slate-900">${v.name}</h3>
               <p class="text-xs text-sky-700 font-medium mt-0.5">${v.category}</p>
@@ -152,7 +152,7 @@
                             : `<span class="text-slate-400">Pendamping</span>`}
                         </td>
                         <td class="py-2.5 px-3 text-right">
-                          <button type="button" onclick="closeModal(); state.prefillStockIn={itemId:'${it.id}', vendorId:'${v.id}', qty:20}; switchPage('stockin')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[11px]">
+                          <button type="button" onclick="closeModal(); openStockInForm({itemId:'${it.id}', vendorId:'${v.id}', qty:20})" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[11px]">
                             Terima Barang (Stock In)
                           </button>
                         </td>
@@ -187,7 +187,6 @@
         email: '',
         paymentTerms: 'TOP 30 Hari',
         leadTimeDays: 3,
-        rating: 4.8,
         status: 'Verified Partner'
       };
 
@@ -275,7 +274,6 @@
         state.vendors.push({
           id: newId,
           npwp: '01.882.441.9-043.000',
-          rating: 4.8,
           status: 'Verified Partner',
           ...payload
         });

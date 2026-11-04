@@ -147,7 +147,7 @@
               <p class="text-slate-500 mt-0.5">${item.specs || '-'}</p>
             </div>
             <div class="text-left sm:text-right shrink-0">
-              <p class="text-[11px] text-slate-500">Total Stok Nasional</p>
+              <p class="text-[11px] text-slate-500">Total Stok Semua Gudang</p>
               <p class="text-2xl font-extrabold text-slate-900 font-mono">${totalQty} ${item.unit}</p>
               <p class="text-[11px] text-sky-700 font-semibold">${formatRupiah(item.basePrice)} / ${item.unit}</p>
             </div>
@@ -246,7 +246,7 @@
         basePrice: 250000,
         preferredVendorId: state.vendors[0]?.id || 'VND-001',
         specs: '',
-        stockByWh: { 'WH-JKT-01': 25, 'WH-JKT-02': 0, 'WH-MDN-01': 0, 'WH-SBY-01': 0 }
+        stockByWh: { 'WH-GA-PROPERTY': 25, 'WH-GA-BUILDING': 0, 'WH-ALBER': 0, 'WH-EKONOMI': 0, 'WH-KALIBARU': 0 }
       };
 
       const html = `

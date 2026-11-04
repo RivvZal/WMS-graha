@@ -11,6 +11,10 @@
       return Object.values(item.stockByWh).reduce((acc, v) => acc + Number(v || 0), 0);
     }
 
+    function movementMatchesWarehouseFilter(movement, warehouseFilter = state.globalHub) {
+      return warehouseFilter === 'ALL' || movement.warehouseId === warehouseFilter || movement.targetWarehouseId === warehouseFilter;
+    }
+
     function getWarehouseById(whId) {
       return state.warehouses.find(w => w.id === whId) || { id: whId, name: whId };
     }
@@ -360,7 +364,7 @@
       const movBadge = document.getElementById('badge-movement-count');
       const usrBadge = document.getElementById('badge-user-count');
       if (invBadge) invBadge.textContent = state.items.length;
-      if (whBadge) whBadge.textContent = state.warehouses.length + ' Hub';
+      if (whBadge) whBadge.textContent = state.warehouses.length + ' Gudang';
       if (vndBadge) vndBadge.textContent = state.vendors.length;
       if (movBadge) movBadge.textContent = state.movements.length;
       if (usrBadge) usrBadge.textContent = state.users.length;
@@ -373,11 +377,11 @@
       }
       const badge = document.getElementById('activeHubBadge');
       if (badge) {
-        badge.textContent = hubId === 'ALL' ? 'Semua Hub Nasional' : getWarehouseById(hubId).name;
+        badge.textContent = hubId === 'ALL' ? 'Semua Gudang Divisi' : getWarehouseById(hubId).name;
       }
       saveState();
       renderCurrentPage();
-      showToast(`Filter tampilan diubah ke: ${hubId === 'ALL' ? 'Semua Gudang Nasional' : getWarehouseById(hubId).name}`, 'info');
+      showToast(`Filter tampilan diubah ke: ${hubId === 'ALL' ? 'Semua Gudang Divisi' : getWarehouseById(hubId).name}`, 'info');
     }
 
     function handleGlobalSearch(query) {

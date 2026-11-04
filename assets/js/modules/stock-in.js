@@ -1,8 +1,10 @@
     let stockInView = 'history';
 
-    function openStockInForm() {
+    function openStockInForm(prefill = null) {
+      if (prefill) state.prefillStockIn = prefill;
       stockInView = 'form';
-      renderStockIn(document.getElementById('viewContainer'));
+      if (state.activePage !== 'stockin') switchPage('stockin');
+      else renderStockIn(document.getElementById('viewContainer'));
     }
 
     function openStockInHistory() {
@@ -13,13 +15,16 @@
     function renderStockIn(container) {
       const showForm = stockInView === 'form';
       const pre = state.prefillStockIn || {};
-      const selectedWhId = pre.warehouseId || (state.globalHub !== 'ALL' ? state.globalHub : 'WH-JKT-01');
+      const selectedWhId = pre.warehouseId || (state.globalHub !== 'ALL' ? state.globalHub : state.warehouses[0].id);
       const selectedVendorId = pre.vendorId || state.vendors[0].id;
       const selectedItemId = pre.itemId || state.items[0].id;
       const defaultQty = pre.qty || 15;
+      const selectedItem = getItemById(selectedItemId);
+      const selectedOffer = (selectedItem.vendorOffers || []).find(offer => offer.vendorId === selectedVendorId);
+      const defaultUnitPrice = Number(selectedOffer?.price ?? selectedItem.basePrice ?? 0);
       if (showForm) state.prefillStockIn = null;
 
-      const inboundHistory = state.movements.filter(m => m.type === 'IN');
+      const inboundHistory = state.movements.filter(m => m.type === 'IN' && movementMatchesWarehouseFilter(m));
       const nextGrnNo = `GRN/GS-JKT/2026/${1102 + inboundHistory.length}`;
 
       container.innerHTML = `
@@ -42,7 +47,7 @@
 
               <div>
                 <label class="block font-semibold text-slate-700 mb-1">Pilih Mitra Vendor Pengirim *</label>
-                <select id="stockInVendor" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-emerald-600">
+                <select id="stockInVendor" onchange="updateStockInItemHelper(true)" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-emerald-600">
                   ${state.vendors.map(v => `<option value="${v.id}" ${v.id === selectedVendorId ? 'selected' : ''}>${v.name} (${v.city})</option>`).join('')}
                 </select>
               </div>
@@ -58,7 +63,7 @@
 
               <div>
                 <label class="block font-semibold text-slate-700 mb-1">Pilih Barang / SKU yang Diterima *</label>
-                <select id="stockInItem" onchange="updateStockInItemHelper()" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-emerald-600">
+                <select id="stockInItem" onchange="updateStockInItemHelper(true)" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-emerald-600">
                   ${state.items.map(it => `<option value="${it.id}" ${it.id === selectedItemId ? 'selected' : ''}>${it.sku} — ${it.name} (${it.unit})</option>`).join('')}
                 </select>
                 <p id="stockInItemInfo" class="text-[11px] text-slate-500 mt-1"></p>
@@ -66,12 +71,21 @@
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
+                  <label class="block font-semibold text-slate-700 mb-1">Harga Vendor per Unit (Rp) *</label>
+                  <input id="stockInUnitPrice" type="number" min="0" step="1" required value="${defaultUnitPrice}" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono font-bold text-slate-800 focus:outline-none focus:border-emerald-600" />
+                </div>
+                <div>
                   <label class="block font-semibold text-slate-700 mb-1">Jumlah Barang Masuk *</label>
                   <input id="stockInQty" type="number" min="1" required value="${defaultQty}" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono font-bold text-emerald-700 focus:outline-none focus:border-emerald-600" />
                 </div>
                 <div>
                   <label class="block font-semibold text-slate-700 mb-1">Tanggal & Jam Penerimaan *</label>
                   <input id="stockInDate" type="text" required value="2026-11-04 08:30" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono" />
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-700 mb-1">Tanggal Produksi</label>
+                  <input id="stockInProductionDate" type="date" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono" />
+                  <p class="mt-1 text-[10px] text-slate-500">Opsional jika informasi tidak tersedia atau tidak berlaku.</p>
                 </div>
               </div>
 
@@ -115,6 +129,7 @@
                     <th class="py-2.5 px-3">Barang Diterima</th>
                     <th class="py-2.5 px-3">Vendor Pengirim</th>
                     <th class="py-2.5 px-3">Gudang Tujuan</th>
+                    <th class="py-2.5 px-3 text-right">Harga / Unit</th>
                     <th class="py-2.5 px-3 text-right">Jumlah</th>
                     <th class="py-2.5 px-3 text-right">Aksi</th>
                   </tr>
@@ -126,19 +141,20 @@
         </div>
       `;
 
-      updateStockInItemHelper();
+      updateStockInItemHelper(showForm);
     }
 
     function renderStockInHistoryRows(rows) {
-      if (!rows.length) return '<tr><td colspan="6" class="py-10 text-center text-slate-400">Tidak ada riwayat yang cocok.</td></tr>';
+      if (!rows.length) return '<tr><td colspan="7" class="py-10 text-center text-slate-400">Tidak ada riwayat yang cocok.</td></tr>';
       return rows.map(m => {
         const item = getItemById(m.itemId);
         return `
           <tr class="hover:bg-slate-50">
             <td class="py-3 px-3"><div class="font-mono font-bold text-slate-900">${m.docNo}</div><div class="font-mono text-[10px] text-slate-500">${m.date}</div></td>
-            <td class="py-3 px-3"><div class="font-semibold text-slate-900">${item.name}</div><div class="font-mono text-[10px] text-sky-700">${item.sku}</div></td>
+            <td class="py-3 px-3"><div class="font-semibold text-slate-900">${item.name}</div><div class="font-mono text-[10px] text-sky-700">${item.sku}</div><div class="text-[10px] text-slate-500">Produksi: ${m.productionDate || 'Belum dicatat'}</div></td>
             <td class="py-3 px-3 text-slate-700">${m.recipientOrSource || '-'}</td>
-            <td class="py-3 px-3"><span class="font-semibold text-slate-800">${m.warehouseId}</span></td>
+            <td class="py-3 px-3"><span class="font-semibold text-slate-800">${getWarehouseById(m.warehouseId).name}</span></td>
+            <td class="py-3 px-3 text-right font-mono text-slate-700">${m.unitPrice == null ? 'Belum dicatat' : formatRupiah(m.unitPrice)}</td>
             <td class="py-3 px-3 text-right font-mono font-bold text-emerald-600">+${m.qty} ${item.unit}</td>
             <td class="py-3 px-3 text-right"><div class="flex justify-end gap-1.5"><button type="button" onclick="openStockInEditModal('${m.id}')" class="rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-700 hover:bg-sky-50 hover:text-sky-700">Edit</button><button type="button" onclick="showTransactionDetailModal('${m.id}')" class="rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-sky-700 hover:bg-sky-50">Bukti</button><button type="button" onclick="confirmDeleteStockIn('${m.id}')" class="rounded-lg bg-rose-50 px-2.5 py-1 text-[11px] font-semibold text-rose-700 hover:bg-rose-100">Hapus</button></div></td>
           </tr>
@@ -149,10 +165,10 @@
     function filterStockInHistory(query) {
       const term = String(query || '').trim().toLowerCase();
       const rows = state.movements.filter(m => {
-        if (m.type !== 'IN') return false;
+        if (m.type !== 'IN' || !movementMatchesWarehouseFilter(m)) return false;
         const item = getItemById(m.itemId);
         const vendor = getVendorById(m.vendorId);
-        return [m.docNo, m.date, m.warehouseId, m.recipientOrSource, item.name, item.sku, vendor.name]
+        return [m.docNo, m.date, m.productionDate, m.warehouseId, getWarehouseById(m.warehouseId).name, m.recipientOrSource, item.name, item.sku, vendor.name]
           .some(value => String(value || '').toLowerCase().includes(term));
       });
       const body = document.getElementById('stockInHistoryBody');
@@ -175,7 +191,9 @@
             <label class="block font-semibold text-slate-700 sm:col-span-2">Barang<select id="editStockInItem" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-normal">${itemOptions}</select></label>
             <label class="block font-semibold text-slate-700 sm:col-span-2">Vendor<select id="editStockInVendor" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-normal">${vendorOptions}</select></label>
             <label class="block font-semibold text-slate-700 sm:col-span-2">Gudang<select id="editStockInWarehouse" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-normal">${warehouseOptions}</select></label>
+            <label class="block font-semibold text-slate-700">Harga vendor per unit (Rp)<input id="editStockInUnitPrice" type="number" min="0" step="1" required value="${Number(transaction.unitPrice ?? getStockInOfferPrice(transaction.itemId, transaction.vendorId))}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-mono font-normal" /></label>
             <label class="block font-semibold text-slate-700">Jumlah<input id="editStockInQty" type="number" min="1" required value="${Number(transaction.qty)}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-mono font-normal" /></label>
+            <label class="block font-semibold text-slate-700">Tanggal produksi<input id="editStockInProductionDate" type="date" value="${escapeProfileValue(transaction.productionDate || '')}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-mono font-normal" /></label>
             <label class="block font-semibold text-slate-700 sm:col-span-2">Catatan<textarea id="editStockInNotes" rows="2" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 font-normal">${escapeProfileValue(transaction.notes || '')}</textarea></label>
           </div>
           <div class="flex justify-end gap-2 border-t border-slate-200 pt-3">
@@ -197,11 +215,13 @@
         itemId: document.getElementById('editStockInItem').value,
         vendorId: document.getElementById('editStockInVendor').value,
         warehouseId: document.getElementById('editStockInWarehouse').value,
+        unitPrice: Number(document.getElementById('editStockInUnitPrice').value),
         qty: Number(document.getElementById('editStockInQty').value) || 0,
+        productionDate: document.getElementById('editStockInProductionDate').value,
         notes: document.getElementById('editStockInNotes').value.trim()
       };
-      if (next.qty <= 0) {
-        showToast('Jumlah barang masuk harus lebih dari 0.', 'error');
+      if (next.qty <= 0 || !Number.isFinite(next.unitPrice) || next.unitPrice < 0) {
+        showToast('Jumlah harus lebih dari 0 dan harga vendor harus valid.', 'error');
         return;
       }
 
@@ -259,14 +279,24 @@
       showToast('Transaksi barang masuk berhasil dihapus.');
     }
 
-    function updateStockInItemHelper() {
+    function getStockInOfferPrice(itemId, vendorId) {
+      const item = getItemById(itemId);
+      const offer = (item.vendorOffers || []).find(entry => entry.vendorId === vendorId);
+      return Number(offer?.price ?? item.basePrice ?? 0);
+    }
+
+    function updateStockInItemHelper(updatePrice = false) {
       const itemId = document.getElementById('stockInItem')?.value;
       const whId = document.getElementById('stockInWarehouse')?.value;
+      const vendorId = document.getElementById('stockInVendor')?.value;
       const infoEl = document.getElementById('stockInItemInfo');
       if (!itemId || !infoEl) return;
       const item = getItemById(itemId);
       const currentWhStock = Number(item.stockByWh?.[whId] || 0);
-      infoEl.textContent = `Stok saat ini di ${whId}: ${currentWhStock} ${item.unit} • Harga Kontrak: ${formatRupiah(item.basePrice)}/${item.unit}`;
+      const offer = (item.vendorOffers || []).find(entry => entry.vendorId === vendorId);
+      const priceInput = document.getElementById('stockInUnitPrice');
+      if (updatePrice && priceInput) priceInput.value = getStockInOfferPrice(itemId, vendorId);
+      infoEl.textContent = `Stok saat ini di ${getWarehouseById(whId).name}: ${currentWhStock} ${item.unit} • ${offer ? 'Harga diisi dari penawaran vendor' : 'Vendor belum memiliki penawaran; harga standar barang digunakan'}`;
     }
 
     function submitStockInForm(e) {
@@ -276,11 +306,13 @@
       const warehouseId = document.getElementById('stockInWarehouse').value;
       const itemId = document.getElementById('stockInItem').value;
       const qty = Number(document.getElementById('stockInQty').value) || 0;
+      const unitPrice = Number(document.getElementById('stockInUnitPrice').value);
       const date = document.getElementById('stockInDate').value.trim();
+      const productionDate = document.getElementById('stockInProductionDate').value;
       const notes = document.getElementById('stockInNotes').value.trim();
 
-      if (qty <= 0) {
-        showToast('Jumlah barang masuk harus lebih dari 0.', 'error');
+      if (qty <= 0 || !Number.isFinite(unitPrice) || unitPrice < 0) {
+        showToast('Jumlah harus lebih dari 0 dan harga vendor harus valid.', 'error');
         return;
       }
 
@@ -293,8 +325,10 @@
         docNo,
         type: 'IN',
         date,
+        productionDate,
         itemId,
         qty,
+        unitPrice,
         warehouseId,
         vendorId,
         recipientOrSource: vendor.name,

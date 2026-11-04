@@ -20,13 +20,14 @@
 
   
   <div class="px-3.5 pt-3.5 pb-2 border-b border-slate-100 bg-white">
-    <label for="globalHubFilter" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1 px-1">Filter Cabang / Hub</label>
+    <label for="globalHubFilter" class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1 px-1">Filter Gudang Divisi</label>
     <select id="globalHubFilter" onchange="handleGlobalHubChange(this.value)" class="w-full bg-slate-50 text-slate-700 text-xs font-medium rounded-xl px-2.5 py-2 border border-slate-200 focus:outline-none focus:border-blue-600 transition">
-      <option value="ALL">Semua Gudang Nasional (4 Hub)</option>
-      <option value="WH-JKT-01">WH-JKT-01 — TPFT Tanjung Priok</option>
-      <option value="WH-JKT-02">WH-JKT-02 — TPS WMP Digul Koja</option>
-      <option value="WH-MDN-01">WH-MDN-01 — Hub Belawan Medan</option>
-      <option value="WH-SBY-01">WH-SBY-01 — Hub Tanjung Perak</option>
+      <option value="ALL">Semua Gudang Divisi (5)</option>
+      <option value="WH-GA-PROPERTY">GA Property</option>
+      <option value="WH-GA-BUILDING">GA Building</option>
+      <option value="WH-ALBER">Alber</option>
+      <option value="WH-EKONOMI">Ekonomi</option>
+      <option value="WH-KALIBARU">Kalibaru</option>
     </select>
   </div>
 
@@ -85,7 +86,7 @@
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
         <span>Gudang</span>
       </span>
-      <span id="badge-warehouse-count" class="nav-badge px-1.5 py-0.5 text-[10px] rounded-md bg-slate-100 text-slate-600 font-mono">4 Hub</span>
+      <span id="badge-warehouse-count" class="nav-badge px-1.5 py-0.5 text-[10px] rounded-md bg-slate-100 text-slate-600 font-mono">5 Gudang</span>
     </button>
 
     <button type="button" onclick="switchPage('vendors')" id="nav-vendors" title="Vendor" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition">

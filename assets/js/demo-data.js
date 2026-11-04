@@ -4,7 +4,7 @@
       activePage: 'dashboard',
       globalHub: 'ALL',
       inventorySubTab: 'list', // 'list' | 'categories' | 'vendorPricing'
-      warehouseSelectedId: 'WH-JKT-01',
+      warehouseSelectedId: 'WH-GA-PROPERTY',
       reportSubTab: 'valuation', // 'valuation' | 'movement' | 'warehouseCap' | 'vendorPerf'
 
       categories: [
@@ -25,58 +25,11 @@
       ],
 
       warehouses: [
-        {
-          id: 'WH-JKT-01',
-          name: 'TPFT & Gudang Utama Tanjung Priok',
-          city: 'Jakarta Utara',
-          address: 'Jl. Timor Raya No. 1, Koja, Tanjung Priok, DKI Jakarta 14140',
-          type: 'Reefer Plug, Cold Storage & Quarantine Inspection (TPFT)',
-          manager: 'Hendra Saputra',
-          phone: '+62-21-4390-4902',
-          capacityPallet: 1200,
-          usedPallet: 920,
-          temperature: '-18°C s/d +24°C',
-          status: 'Operasional Aktif'
-        },
-        {
-          id: 'WH-JKT-02',
-          name: 'TPS WMP Digul Koja',
-          city: 'Jakarta Utara',
-          address: 'Jl. Digul, Koja, Kawasan Pabean Tanjung Priok, Jakarta Utara',
-          type: 'MHE Workshop, Heavy Sparepart & Container Yard Support',
-          manager: 'Bambang Wijaya',
-          phone: '+62-21-4390-5118',
-          capacityPallet: 850,
-          usedPallet: 610,
-          temperature: 'Ambient (28°C)',
-          status: 'Operasional Aktif'
-        },
-        {
-          id: 'WH-MDN-01',
-          name: 'Gudang Graha Segara Belawan',
-          city: 'Medan (Belawan)',
-          address: 'Kawasan Pelabuhan Belawan, Medan, Sumatera Utara',
-          type: 'Reefer Container Inspection & Logistics Hub Sumatera',
-          manager: 'Surya Darmawan',
-          phone: '+62-61-6941-882',
-          capacityPallet: 650,
-          usedPallet: 430,
-          temperature: '-15°C s/d Ambient',
-          status: 'Operasional Aktif'
-        },
-        {
-          id: 'WH-SBY-01',
-          name: 'Gudang Graha Segara Tanjung Perak',
-          city: 'Surabaya',
-          address: 'Kawasan Pelabuhan Tanjung Perak, Surabaya, Jawa Timur',
-          type: 'Eastern Hub TPFT, Cold Chain & MHE Support',
-          manager: 'Rina Kusumawardhani',
-          phone: '+62-31-3295-401',
-          capacityPallet: 900,
-          usedPallet: 685,
-          temperature: '-20°C s/d +25°C',
-          status: 'Operasional Aktif'
-        }
+        { id: 'WH-GA-PROPERTY', name: 'GA Property', division: 'GA', subDivision: 'Property', owner: 'Purchasing Admin', status: 'Aktif' },
+        { id: 'WH-GA-BUILDING', name: 'GA Building', division: 'GA', subDivision: 'Building', owner: 'Purchasing Admin', status: 'Aktif' },
+        { id: 'WH-ALBER', name: 'Alber', division: 'Alber', subDivision: '', owner: 'Purchasing Admin', status: 'Aktif' },
+        { id: 'WH-EKONOMI', name: 'Ekonomi', division: 'Ekonomi', subDivision: '', owner: 'Purchasing Admin', status: 'Aktif' },
+        { id: 'WH-KALIBARU', name: 'Kalibaru', division: 'Kalibaru', subDivision: '', owner: 'Purchasing Admin', status: 'Aktif' }
       ],
 
       vendors: [
@@ -93,7 +46,6 @@
           email: 'wahyu.nugroho@samuderareefer.co.id',
           paymentTerms: 'TOP 30 Hari',
           leadTimeDays: 3,
-          rating: 4.9,
           status: 'Verified Partner'
         },
         {
@@ -109,7 +61,6 @@
           email: 'sales@traktormaritim.co.id',
           paymentTerms: 'TOP 45 Hari',
           leadTimeDays: 5,
-          rating: 4.8,
           status: 'Verified Partner'
         },
         {
@@ -125,7 +76,6 @@
           email: 'clara@sapseal.id',
           paymentTerms: 'TOP 30 Hari',
           leadTimeDays: 2,
-          rating: 4.7,
           status: 'Verified Partner'
         },
         {
@@ -141,7 +91,6 @@
           email: 'order@primapallet.co.id',
           paymentTerms: 'TOP 14 Hari',
           leadTimeDays: 4,
-          rating: 4.6,
           status: 'Active Vendor'
         },
         {
@@ -157,7 +106,6 @@
           email: 'kevin@elektrokargo.co.id',
           paymentTerms: 'TOP 30 Hari',
           leadTimeDays: 3,
-          rating: 4.8,
           status: 'Verified Partner'
         },
         {
@@ -173,7 +121,6 @@
           email: 'rizal@petrolubrikan.co.id',
           paymentTerms: 'TOP 30 Hari',
           leadTimeDays: 2,
-          rating: 4.7,
           status: 'Active Vendor'
         }
       ],
@@ -189,7 +136,7 @@
           basePrice: 875000,
           preferredVendorId: 'VND-001',
           specs: '4-Pin 3h, 380-440V AC, IP67 Watertight untuk Monitoring Reefer Yard TPFT',
-          stockByWh: { 'WH-JKT-01': 68, 'WH-JKT-02': 12, 'WH-MDN-01': 24, 'WH-SBY-01': 32 },
+          stockByWh: { 'WH-GA-PROPERTY': 68, 'WH-GA-BUILDING': 0, 'WH-ALBER': 12, 'WH-EKONOMI': 24, 'WH-KALIBARU': 32 },
           vendorOffers: [
             { vendorId: 'VND-001', price: 875000, moq: 10, leadTime: 3, quoteNo: 'QT/STR/2026/104', validUntil: '2026-12-31', warranty: '12 Bulan', isPreferred: true },
             { vendorId: 'VND-005', price: 910000, moq: 5, leadTime: 2, quoteNo: 'QT/EKO/2026/088', validUntil: '2026-12-15', warranty: '6 Bulan', isPreferred: false }
@@ -205,7 +152,7 @@
           basePrice: 1450000,
           preferredVendorId: 'VND-001',
           specs: 'Akurasi ±0.1°C, Kabel 12m Heavy-Duty, Kompatibel Kontainer Karantina Buah/Daging',
-          stockByWh: { 'WH-JKT-01': 16, 'WH-JKT-02': 0, 'WH-MDN-01': 8, 'WH-SBY-01': 6 },
+          stockByWh: { 'WH-GA-PROPERTY': 16, 'WH-GA-BUILDING': 0, 'WH-ALBER': 0, 'WH-EKONOMI': 8, 'WH-KALIBARU': 6 },
           vendorOffers: [
             { vendorId: 'VND-001', price: 1450000, moq: 5, leadTime: 3, quoteNo: 'QT/STR/2026/112', validUntil: '2026-12-31', warranty: '12 Bulan', isPreferred: true },
             { vendorId: 'VND-005', price: 1520000, moq: 5, leadTime: 4, quoteNo: 'QT/EKO/2026/095', validUntil: '2026-11-30', warranty: '12 Bulan', isPreferred: false }
@@ -221,7 +168,7 @@
           basePrice: 680000,
           preferredVendorId: 'VND-003',
           specs: '1 Box = 100 Pcs, Anti-Spin, Laser Barcoded untuk Segel Ulang Pemeriksaan TPFT',
-          stockByWh: { 'WH-JKT-01': 185, 'WH-JKT-02': 45, 'WH-MDN-01': 60, 'WH-SBY-01': 75 },
+          stockByWh: { 'WH-GA-PROPERTY': 185, 'WH-GA-BUILDING': 0, 'WH-ALBER': 45, 'WH-EKONOMI': 60, 'WH-KALIBARU': 75 },
           vendorOffers: [
             { vendorId: 'VND-003', price: 680000, moq: 20, leadTime: 2, quoteNo: 'QT/SAP/2026/210', validUntil: '2026-12-31', warranty: 'Sertifikasi ISO 17712', isPreferred: true },
             { vendorId: 'VND-004', price: 725000, moq: 15, leadTime: 4, quoteNo: 'QT/PPL/2026/041', validUntil: '2026-12-20', warranty: 'Standar SNI', isPreferred: false }
@@ -237,7 +184,7 @@
           basePrice: 2350000,
           preferredVendorId: 'VND-002',
           specs: 'OEM Part Equivalen, Microglass 10 Micron, High Pressure Return Filter',
-          stockByWh: { 'WH-JKT-01': 12, 'WH-JKT-02': 18, 'WH-MDN-01': 6, 'WH-SBY-01': 9 },
+          stockByWh: { 'WH-GA-PROPERTY': 12, 'WH-GA-BUILDING': 0, 'WH-ALBER': 18, 'WH-EKONOMI': 6, 'WH-KALIBARU': 9 },
           vendorOffers: [
             { vendorId: 'VND-002', price: 2350000, moq: 4, leadTime: 5, quoteNo: 'QT/TMN/2026/077', validUntil: '2026-12-31', warranty: '6 Bulan / 1000 HM', isPreferred: true }
           ]
@@ -252,7 +199,7 @@
           basePrice: 3850000,
           preferredVendorId: 'VND-002',
           specs: '3-Stage Compound Non-Marking / Heat Resistant untuk Operasional Dalam Gudang & Ramp',
-          stockByWh: { 'WH-JKT-01': 4, 'WH-JKT-02': 6, 'WH-MDN-01': 2, 'WH-SBY-01': 2 },
+          stockByWh: { 'WH-GA-PROPERTY': 4, 'WH-GA-BUILDING': 0, 'WH-ALBER': 6, 'WH-EKONOMI': 2, 'WH-KALIBARU': 2 },
           vendorOffers: [
             { vendorId: 'VND-002', price: 3850000, moq: 4, leadTime: 5, quoteNo: 'QT/TMN/2026/082', validUntil: '2026-12-31', warranty: '12 Bulan', isPreferred: true }
           ]
@@ -267,7 +214,7 @@
           basePrice: 640000,
           preferredVendorId: 'VND-004',
           specs: 'Static Load 4 Ton, Dynamic 1.5 Ton, Racking 1.2 Ton dengan 4 Steel Bars Food/Cold Grade',
-          stockByWh: { 'WH-JKT-01': 120, 'WH-JKT-02': 55, 'WH-MDN-01': 40, 'WH-SBY-01': 65 },
+          stockByWh: { 'WH-GA-PROPERTY': 120, 'WH-GA-BUILDING': 0, 'WH-ALBER': 55, 'WH-EKONOMI': 40, 'WH-KALIBARU': 65 },
           vendorOffers: [
             { vendorId: 'VND-004', price: 640000, moq: 25, leadTime: 4, quoteNo: 'QT/PPL/2026/019', validUntil: '2026-12-31', warranty: '24 Bulan Pemakaian Normal', isPreferred: true },
             { vendorId: 'VND-003', price: 675000, moq: 20, leadTime: 3, quoteNo: 'QT/SAP/2026/219', validUntil: '2026-12-15', warranty: '12 Bulan', isPreferred: false }
@@ -283,7 +230,7 @@
           basePrice: 790000,
           preferredVendorId: 'VND-003',
           specs: 'Termasuk Celana Bib, Sarung Tangan Polar & Penutup Kepala untuk Tim Behandle Reefer',
-          stockByWh: { 'WH-JKT-01': 18, 'WH-JKT-02': 4, 'WH-MDN-01': 6, 'WH-SBY-01': 8 },
+          stockByWh: { 'WH-GA-PROPERTY': 18, 'WH-GA-BUILDING': 0, 'WH-ALBER': 4, 'WH-EKONOMI': 6, 'WH-KALIBARU': 8 },
           vendorOffers: [
             { vendorId: 'VND-003', price: 790000, moq: 10, leadTime: 2, quoteNo: 'QT/SAP/2026/225', validUntil: '2026-12-31', warranty: '6 Bulan Jahitan & Zipper', isPreferred: true }
           ]
@@ -298,7 +245,7 @@
           basePrice: 1950000,
           preferredVendorId: 'VND-005',
           specs: '1 Box = 10 Unit Logger PDF Otomatis, Rentang -30°C s/d +70°C, Sertifikat Kalibrasi',
-          stockByWh: { 'WH-JKT-01': 25, 'WH-JKT-02': 5, 'WH-MDN-01': 9, 'WH-SBY-01': 12 },
+          stockByWh: { 'WH-GA-PROPERTY': 25, 'WH-GA-BUILDING': 0, 'WH-ALBER': 5, 'WH-EKONOMI': 9, 'WH-KALIBARU': 12 },
           vendorOffers: [
             { vendorId: 'VND-005', price: 1950000, moq: 5, leadTime: 3, quoteNo: 'QT/EKO/2026/103', validUntil: '2026-12-31', warranty: '12 Bulan', isPreferred: true },
             { vendorId: 'VND-001', price: 2050000, moq: 5, leadTime: 3, quoteNo: 'QT/STR/2026/128', validUntil: '2026-12-31', warranty: '12 Bulan', isPreferred: false }
@@ -314,7 +261,7 @@
           basePrice: 48000,
           preferredVendorId: 'VND-006',
           specs: 'Oli Hidrolik Performa Tinggi untuk Spreader Reachstacker & Forklift Gudang',
-          stockByWh: { 'WH-JKT-01': 140, 'WH-JKT-02': 220, 'WH-MDN-01': 80, 'WH-SBY-01': 100 },
+          stockByWh: { 'WH-GA-PROPERTY': 140, 'WH-GA-BUILDING': 0, 'WH-ALBER': 220, 'WH-EKONOMI': 80, 'WH-KALIBARU': 100 },
           vendorOffers: [
             { vendorId: 'VND-006', price: 48000, moq: 100, leadTime: 2, quoteNo: 'QT/PLB/2026/055', validUntil: '2026-12-31', warranty: 'Keaslian Distributor Resmi', isPreferred: true },
             { vendorId: 'VND-002', price: 52000, moq: 60, leadTime: 4, quoteNo: 'QT/TMN/2026/090', validUntil: '2026-12-15', warranty: 'Standar OEM', isPreferred: false }
@@ -330,7 +277,7 @@
           basePrice: 185000,
           preferredVendorId: 'VND-004',
           specs: 'Berat 15 Kg/Roll, Daya Regang 250% untuk Wrapping Kargo Pasca Pemeriksaan Karantina',
-          stockByWh: { 'WH-JKT-01': 90, 'WH-JKT-02': 30, 'WH-MDN-01': 22, 'WH-SBY-01': 38 },
+          stockByWh: { 'WH-GA-PROPERTY': 90, 'WH-GA-BUILDING': 0, 'WH-ALBER': 30, 'WH-EKONOMI': 22, 'WH-KALIBARU': 38 },
           vendorOffers: [
             { vendorId: 'VND-004', price: 185000, moq: 30, leadTime: 4, quoteNo: 'QT/PPL/2026/032', validUntil: '2026-12-31', warranty: 'Ganti Baru Jika Cacat Gulung', isPreferred: true }
           ]
@@ -343,9 +290,11 @@
           docNo: 'GRN/GS-JKT/2026/1101',
           type: 'IN',
           date: '2026-11-04 07:15',
+          productionDate: '2026-10-20',
           itemId: 'ITM-001',
           qty: 30,
-          warehouseId: 'WH-JKT-01',
+          unitPrice: 875000,
+          warehouseId: 'WH-GA-PROPERTY',
           vendorId: 'VND-001',
           recipientOrSource: 'PT. Samudera Teknik Reeferindo (PO-2026-881)',
           operator: 'Hendra Saputra',
@@ -358,7 +307,7 @@
           date: '2026-11-03 16:20',
           itemId: 'ITM-003',
           qty: 25,
-          warehouseId: 'WH-JKT-01',
+          warehouseId: 'WH-GA-PROPERTY',
           vendorId: null,
           recipientOrSource: 'Tim Pemeriksaan Fisik Terpadu (TPFT) Blok B - Karantina',
           operator: 'Fajar Ramadhan',
@@ -369,9 +318,11 @@
           docNo: 'GRN/GS-JKT2/2026/1098',
           type: 'IN',
           date: '2026-11-03 13:40',
+          productionDate: '2026-09-15',
           itemId: 'ITM-009',
           qty: 120,
-          warehouseId: 'WH-JKT-02',
+          unitPrice: 48000,
+          warehouseId: 'WH-ALBER',
           vendorId: 'VND-006',
           recipientOrSource: 'PT. Petro Lubrikan Bahari (PO-2026-875)',
           operator: 'Bambang Wijaya',
@@ -384,9 +335,9 @@
           date: '2026-11-02 15:10',
           itemId: 'ITM-010',
           qty: 12,
-          warehouseId: 'WH-SBY-01',
+          warehouseId: 'WH-KALIBARU',
           vendorId: null,
-          recipientOrSource: 'Area Behandle Cold Storage Tanjung Perak',
+          recipientOrSource: 'Divisi Operasional Kalibaru',
           operator: 'Rina Kusumawardhani',
           notes: 'Pemakaian wrapping palet komoditas impor holtikultura pasca inspeksi.'
         },
@@ -397,21 +348,23 @@
           date: '2026-11-02 10:05',
           itemId: 'ITM-008',
           qty: 5,
-          warehouseId: 'WH-JKT-01',
-          targetWarehouseId: 'WH-MDN-01',
+          warehouseId: 'WH-GA-PROPERTY',
+          targetWarehouseId: 'WH-EKONOMI',
           vendorId: null,
-          recipientOrSource: 'Mutasi Antar Hub: TPFT Priok ke Hub Belawan Medan',
+          recipientOrSource: 'Mutasi antar gudang divisi: GA Property ke Ekonomi',
           operator: 'Hendra Saputra',
-          notes: 'Pengiriman tambahan USB Data Logger Cold Chain untuk kebutuhan lonjakan reefer Belawan.'
+          notes: 'Pengiriman tambahan USB Data Logger untuk kebutuhan divisi Ekonomi.'
         },
         {
           id: 'TRX-20261101-006',
           docNo: 'GRN/GS-JKT/2026/1089',
           type: 'IN',
           date: '2026-11-01 11:30',
+          productionDate: '2026-10-10',
           itemId: 'ITM-006',
           qty: 50,
-          warehouseId: 'WH-JKT-01',
+          unitPrice: 640000,
+          warehouseId: 'WH-GA-PROPERTY',
           vendorId: 'VND-004',
           recipientOrSource: 'CV. Prima Pallet & Packaging Logistik (PO-2026-860)',
           operator: 'Fajar Ramadhan',
@@ -424,21 +377,21 @@
           date: '2026-10-31 14:45',
           itemId: 'ITM-004',
           qty: 4,
-          warehouseId: 'WH-JKT-02',
+          warehouseId: 'WH-ALBER',
           vendorId: null,
-          recipientOrSource: 'Workshop MHE Digul - Unit Kalmar RS-04 & RS-07',
+          recipientOrSource: 'Divisi Alber — Unit Kalmar RS-04 & RS-07',
           operator: 'Bambang Wijaya',
           notes: 'Penggantian berkala filter hidrolik 2.000 HM.'
         }
       ],
 
       users: [
-        { id: 'USR-01', name: 'Hendra Saputra', email: 'hendra.saputra@grahasegara.co.id', role: 'Kepala Gudang (Warehouse Manager)', hub: 'WH-JKT-01', status: 'Aktif', lastLogin: '2026-11-04 07:45' },
-        { id: 'USR-02', name: 'Bambang Wijaya', email: 'bambang.wijaya@grahasegara.co.id', role: 'Kepala Gudang (Warehouse Manager)', hub: 'WH-JKT-02', status: 'Aktif', lastLogin: '2026-11-04 07:10' },
-        { id: 'USR-03', name: 'Fajar Ramadhan', email: 'fajar.ramadhan@grahasegara.co.id', role: 'Supervisor Inbound & Outbound', hub: 'WH-JKT-01', status: 'Aktif', lastLogin: '2026-11-04 06:55' },
+        { id: 'USR-01', name: 'Hendra Saputra', email: 'hendra.saputra@grahasegara.co.id', role: 'Kepala Gudang (Warehouse Manager)', hub: 'WH-GA-PROPERTY', status: 'Aktif', lastLogin: '2026-11-04 07:45' },
+        { id: 'USR-02', name: 'Bambang Wijaya', email: 'bambang.wijaya@grahasegara.co.id', role: 'Kepala Gudang (Warehouse Manager)', hub: 'WH-ALBER', status: 'Aktif', lastLogin: '2026-11-04 07:10' },
+        { id: 'USR-03', name: 'Fajar Ramadhan', email: 'fajar.ramadhan@grahasegara.co.id', role: 'Supervisor Inbound & Outbound', hub: 'WH-GA-PROPERTY', status: 'Aktif', lastLogin: '2026-11-04 06:55' },
         { id: 'USR-04', name: 'Nadia Putri Lestari', email: 'nadia.procurement@grahasegara.co.id', role: 'Procurement & Vendor Specialist', hub: 'ALL', status: 'Aktif', lastLogin: '2026-11-03 17:30' },
-        { id: 'USR-05', name: 'Surya Darmawan', email: 'surya.belawan@grahasegara.co.id', role: 'Koordinator Hub Belawan', hub: 'WH-MDN-01', status: 'Aktif', lastLogin: '2026-11-03 16:12' },
-        { id: 'USR-06', name: 'Rina Kusumawardhani', email: 'rina.perak@grahasegara.co.id', role: 'Koordinator Hub Tanjung Perak', hub: 'WH-SBY-01', status: 'Aktif', lastLogin: '2026-11-04 07:20' }
+        { id: 'USR-05', name: 'Surya Darmawan', email: 'surya.belawan@grahasegara.co.id', role: 'Koordinator Gudang Ekonomi', hub: 'WH-EKONOMI', status: 'Aktif', lastLogin: '2026-11-03 16:12' },
+        { id: 'USR-06', name: 'Rina Kusumawardhani', email: 'rina.perak@grahasegara.co.id', role: 'Koordinator Gudang Kalibaru', hub: 'WH-KALIBARU', status: 'Aktif', lastLogin: '2026-11-04 07:20' }
       ],
 
       prefillStockIn: null
@@ -453,9 +406,45 @@
         if (raw) {
           const parsed = JSON.parse(raw);
           const loaded = Object.assign({}, JSON.parse(JSON.stringify(DEFAULT_STATE)), parsed);
-          loaded.warehouses.forEach(warehouse => delete warehouse.zones);
+          loaded.warehouses = JSON.parse(JSON.stringify(DEFAULT_STATE.warehouses));
+          loaded.vendors.forEach(vendor => delete vendor.rating);
+          loaded.items.forEach(item => {
+            const stock = item.stockByWh || {};
+            item.stockByWh = {
+              'WH-GA-PROPERTY': Number(stock['WH-GA-PROPERTY'] !== undefined ? stock['WH-GA-PROPERTY'] : stock['WH-JKT-01'] || 0),
+              'WH-GA-BUILDING': Number(stock['WH-GA-BUILDING'] || 0),
+              'WH-ALBER': Number(stock['WH-ALBER'] !== undefined ? stock['WH-ALBER'] : stock['WH-JKT-02'] || 0),
+              'WH-EKONOMI': Number(stock['WH-EKONOMI'] !== undefined ? stock['WH-EKONOMI'] : stock['WH-MDN-01'] || 0),
+              'WH-KALIBARU': Number(stock['WH-KALIBARU'] !== undefined ? stock['WH-KALIBARU'] : stock['WH-SBY-01'] || 0)
+            };
+            delete item.rackLocation;
+          });
+          loaded.movements.forEach(movement => {
+            movement.warehouseId = ({ 'WH-JKT-01': 'WH-GA-PROPERTY', 'WH-JKT-02': 'WH-ALBER', 'WH-MDN-01': 'WH-EKONOMI', 'WH-SBY-01': 'WH-KALIBARU' })[movement.warehouseId] || movement.warehouseId;
+            movement.targetWarehouseId = ({ 'WH-JKT-01': 'WH-GA-PROPERTY', 'WH-JKT-02': 'WH-ALBER', 'WH-MDN-01': 'WH-EKONOMI', 'WH-SBY-01': 'WH-KALIBARU' })[movement.targetWarehouseId] || movement.targetWarehouseId;
+            const seededInbound = {
+              'TRX-20261104-001': { productionDate: '2026-10-20', unitPrice: 875000 },
+              'TRX-20261103-003': { productionDate: '2026-09-15', unitPrice: 48000 },
+              'TRX-20261101-006': { productionDate: '2026-10-10', unitPrice: 640000 }
+            }[movement.id];
+            if (movement.type === 'IN' && seededInbound) {
+              if (movement.productionDate == null) movement.productionDate = seededInbound.productionDate;
+              if (movement.unitPrice == null) movement.unitPrice = seededInbound.unitPrice;
+            }
+          });
+          loaded.users.forEach(user => {
+            user.hub = ({ 'WH-JKT-01': 'WH-GA-PROPERTY', 'WH-JKT-02': 'WH-ALBER', 'WH-MDN-01': 'WH-EKONOMI', 'WH-SBY-01': 'WH-KALIBARU' })[user.hub] || user.hub;
+            user.role = (user.role || '').replace('Koordinator Hub Belawan', 'Koordinator Gudang Ekonomi').replace('Koordinator Hub Tanjung Perak', 'Koordinator Gudang Kalibaru');
+          });
+          loaded.globalHub = ({ 'WH-JKT-01': 'WH-GA-PROPERTY', 'WH-JKT-02': 'WH-ALBER', 'WH-MDN-01': 'WH-EKONOMI', 'WH-SBY-01': 'WH-KALIBARU' })[loaded.globalHub] || loaded.globalHub;
+          loaded.warehouseSelectedId = ({ 'WH-JKT-01': 'WH-GA-PROPERTY', 'WH-JKT-02': 'WH-ALBER', 'WH-MDN-01': 'WH-EKONOMI', 'WH-SBY-01': 'WH-KALIBARU' })[loaded.warehouseSelectedId] || loaded.warehouseSelectedId;
           loaded.items.forEach(item => delete item.rackLocation);
-          loaded.movements.forEach(movement => delete movement.zoneCode);
+          loaded.movements.forEach(movement => {
+            movement.recipientOrSource = (movement.recipientOrSource || '').replace(/Tanjung Perak|Belawan Medan|Belawan|TPFT Priok|Digul/gi, 'gudang divisi');
+            movement.notes = (movement.notes || '').replace(/Belawan/gi, 'gudang divisi');
+            delete movement.zoneCode;
+          });
+          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(loaded)); } catch (storageError) { console.warn('Unable to save migrated state:', storageError); }
           return loaded;
         }
       } catch (err) {

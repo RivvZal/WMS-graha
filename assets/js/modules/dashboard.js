@@ -99,9 +99,9 @@
           <details class="dashboard-advanced rounded-2xl border border-slate-200 bg-white shadow-xs" ontoggle="if(this.open){requestAnimationFrame(() => Object.values(chartInstances).forEach(chart => chart?.resize()))}">
             <summary class="dashboard-advanced-summary">
               <span><strong>Grafik & analisis</strong><small>Lihat pergerakan dan kategori stok</small></span>
-              <span class="dashboard-advanced-chevron" aria-hidden="true">⌄</span>
+              <span class="dashboard-advanced-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             </summary>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 pt-0">
+            <div class="dashboard-advanced-panel grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 pt-0">
             <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                 <div>
@@ -135,27 +135,17 @@
             
             <details class="dashboard-advanced rounded-2xl border border-slate-200 bg-white shadow-xs">
               <summary class="dashboard-advanced-summary">
-                <span><strong>Kapasitas Gudang</strong><small>Lihat kapasitas dan PIC setiap gudang</small></span>
-                <span class="dashboard-advanced-chevron" aria-hidden="true">⌄</span>
+                <span><strong>Gudang Divisi</strong><small>Ringkasan stok per gudang</small></span>
+                <span class="dashboard-advanced-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </summary>
-              <div class="p-4 pt-0">
+              <div class="dashboard-advanced-panel p-4 pt-0">
                 <div class="space-y-3.5">
                   ${activeWarehouses.map(wh => {
-                    const pct = Math.round((wh.usedPallet / wh.capacityPallet) * 100);
-                    const barColor = pct > 80 ? 'bg-amber-500' : 'bg-sky-600';
+                    const total = state.items.reduce((sum, item) => sum + Number(item.stockByWh?.[wh.id] || 0), 0);
                     return `
-                      <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-sky-300 transition cursor-pointer" onclick="state.warehouseSelectedId='${wh.id}'; switchPage('warehouse')">
-                        <div class="flex items-center justify-between text-xs font-semibold text-slate-800 mb-1">
-                          <span>${wh.name} (${wh.id})</span>
-                          <span class="font-mono text-slate-700">${wh.usedPallet} / ${wh.capacityPallet} Palet (${pct}%)</span>
-                        </div>
-                        <div class="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
-                          <div class="h-full ${barColor} rounded-full" style="width:${pct}%"></div>
-                        </div>
-                        <div class="flex items-center justify-between text-[11px] text-slate-500 mt-1.5">
-                          <span>PIC: ${wh.manager}</span>
-                          <span>Suhu: ${wh.temperature}</span>
-                        </div>
+                      <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-sky-300 transition cursor-pointer flex items-center justify-between gap-3" onclick="state.warehouseSelectedId='${wh.id}'; switchPage('warehouse')">
+                        <div><div class="text-sm font-semibold text-slate-800">${wh.name}</div><div class="text-[11px] text-slate-500">Divisi ${wh.division}${wh.subDivision ? ` · ${wh.subDivision}` : ''}</div></div>
+                        <span class="font-mono text-xs font-bold text-slate-700">${total.toLocaleString('id-ID')} unit</span>
                       </div>
                     `;
                   }).join('')}
@@ -336,13 +326,12 @@
 
     function quickRestockFromAlert(itemId) {
       const item = getItemById(itemId);
-      state.prefillStockIn = {
+      openStockInForm({
         itemId: item.id,
         vendorId: item.preferredVendorId || state.vendors[0].id,
-        warehouseId: state.globalHub === 'ALL' ? 'WH-JKT-01' : state.globalHub,
+        warehouseId: state.globalHub === 'ALL' ? 'WH-GA-PROPERTY' : state.globalHub,
         qty: Math.max(20, item.minStock)
-      };
-      switchPage('stockin');
+      });
       showToast(`Formulir Stock In diisi otomatis untuk restock ${item.name}`, 'info');
     }
 

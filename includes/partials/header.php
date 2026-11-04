@@ -8,10 +8,10 @@
             <div class="flex items-center gap-2">
               <h1 id="pageHeaderTitle" class="text-base sm:text-lg font-bold text-slate-900 truncate">Dashboard Operasional WMS</h1>
               <span id="activeHubBadge" class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-sky-50 text-sky-700 border border-sky-200">
-                Semua Hub Nasional
+                Semua Gudang Divisi
               </span>
             </div>
-            <p id="pageHeaderSubtitle" class="text-xs text-slate-500 truncate">PT. Graha Segara • Jl. Timor Raya No. 1, Koja, Tanjung Priok, Jakarta Utara</p>
+            <p id="pageHeaderSubtitle" class="text-xs text-slate-500 truncate">Manajemen persediaan gudang divisi PT. Graha Segara</p>
           </div>
         </div>
 
