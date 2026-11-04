@@ -6,7 +6,7 @@ Struktur utama nya =
 - `index.php` — entry point dan susunan layout.
 - `includes/partials/` — head, sidebar, header, modal, notifikasi, dan urutan pemuatan JavaScript.
 - `assets/css/app.css` — styling tambahan.
-- `assets/js/demo-data.js` — data simulasi yang masih disimpan di browser.
+- `assets/js/demo-data.js` — data simulasi disimpan di browser.
 - `assets/js/app-core.js` — state, helper, pencarian, dan router.
 - `assets/js/modules/` — logika UI per fitur WMS.
 
