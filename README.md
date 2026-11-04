@@ -17,5 +17,5 @@ Data dan transaksi masih berupa simulasi di `demo-data.js` dengan `localStorage`
 
 1.User Per divisi gudang -> hanya bisa melihat gudang nya sendiri ( belum diterapkan di sistem )
 2.Account -> admin ( purchasing & IT ) | User Divisi Per Gudang
-3.Sistem User belum dibuat
+3.Sistem User belum dibuat ( masih only admin view )
 
